@@ -1,0 +1,62 @@
+/* Reset standard web behaviors */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden; /* Prevent the whole browser window from scrolling */
+  touch-action: manipulation; /* Improves touch response */
+}
+
+.app {
+  /* This makes the app take up exactly the full screen height */
+  height: 100dvh; /* 'dvh' handles the mobile URL bar better than 'vh' */
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  background: #f9fafb;
+  position: relative;
+  overflow: hidden; 
+}
+
+/* 
+   This is the magic class. 
+   Every page (Browse, Swipe, Seller) will inherit this.
+   It tells the page to fill the empty space between Header and Footer
+   and scroll internally.
+*/
+.page-container {
+  flex: 1; /* Fill remaining space */
+  overflow-y: auto; /* Scroll vertically */
+  overflow-x: hidden; /* No side scrolling */
+  width: 100%;
+  position: relative;
+  /* Add padding so content isn't hidden behind the fixed bars */
+  /* Note: If Header/Footer are relative in flex, we might not need this, 
+     but usually safe to keep if they are 'fixed' */
+}
+
+/* Scrollbar hiding for clean UI */
+.page-container::-webkit-scrollbar {
+  display: none;
+}
+
+
+/* Mobile responsiveness */
+@media (max-width: 640px) {
+  .card-stack {
+    max-height: none;
+  }
+  
+  .card-info {
+    padding: 1rem;
+  }
+  
+  .card-header h3 {
+    font-size: 1.125rem;
+  }
+  
+  .price {
+    font-size: 1.25rem;
+  }
+}

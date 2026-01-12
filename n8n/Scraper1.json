@@ -1,0 +1,173 @@
+{
+  "name": "Scraper1",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "fetch-insta",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        16,
+        0
+      ],
+      "id": "f83aed0b-0fbf-47d1-a8a5-e5b4c560bb38",
+      "name": "Webhook",
+      "webhookId": "492b77dd-e9be-4bb1-b39a-da8f46530f23"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "APIKEYHERE", 
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"username\": [ \"{{ $json.query.username }}\" ],\n  \"resultsLimit\": {{ parseInt($json.query.limit) || 4 }}\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "15e29c3c-3013-450c-85bc-fe33da861422",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7c6175b8-fe32-4fc7-b24e-6de45f9e3104",
+              "name": "caption",
+              "value": "={{ $json.caption }}",
+              "type": "string"
+            },
+            {
+              "id": "805c0e8e-9302-4511-87cc-5580fc32145c",
+              "name": "displayUrl",
+              "value": "={{ $json.displayUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "3a2a7e81-ce13-4e4d-bc9e-739fb39067fb",
+              "name": "images",
+              "value": "={{ $json.images }}",
+              "type": "array"
+            },
+            {
+              "id": "78884206-88a4-4813-9df8-ef04436e69f6",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "d799fe6f-d9fc-43e5-851c-64c1d053710f",
+              "name": "url",
+              "value": "={{ $json.url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        384,
+        0
+      ],
+      "id": "0aebbd5a-b11a-46d0-b298-c40329fdf23f",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json.data }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        704,
+        0
+      ],
+      "id": "cad14516-2b42-411e-bcfd-83ada1941f11",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        560,
+        0
+      ],
+      "id": "c253afe8-f4a2-438a-b60d-befdb00ff60f",
+      "name": "Aggregate"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "4bc88623-575a-45fa-b6f1-5551a4b85fc7",
+  "meta": {
+    "instanceId": "e01649b380adb67d120dcc6e2cc74d9d551195ca52fa56fc1e0bc9e74b218f17"
+  },
+  "id": "WCqZ5msJTzwwfbvM",
+  "tags": []
+}

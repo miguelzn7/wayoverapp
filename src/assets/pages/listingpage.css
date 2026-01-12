@@ -1,0 +1,190 @@
+.listing-page {
+  width: 100%;
+  padding-bottom: 120px;
+}
+
+/* CAROUSEL (Snap Scroll) */
+.carousel-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4/5; /* Keep the consistent shape */
+  background: #eee;
+}
+
+.carousel-track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory; /* The magic snap property */
+  width: 100%;
+  height: 100%;
+  /* Hide scrollbar */
+  scrollbar-width: none;
+}
+.carousel-track::-webkit-scrollbar { display: none; }
+
+.carousel-image {
+  flex: 0 0 100%; /* Each image takes full width */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  scroll-snap-align: center;
+}
+
+/* Reuse the dots from your card design */
+.image-dots {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+  z-index: 10;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transition: all 0.3s;
+}
+
+.dot.active {
+  background: white;
+  transform: scale(1.2);
+}
+
+/* DETAILS */
+.listing-details {
+  padding: 20px;
+  background: white;
+}
+
+.title-row {
+  margin-bottom: 20px;
+}
+
+.title-row h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 5px 0;
+  line-height: 1.2;
+}
+
+.price-text {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #10b981; /* Green */
+}
+
+/* BUTTONS */
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.btn-buy {
+  flex: 2;
+  background: #000;
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.btn-offer {
+  flex: 1;
+  background: #f3f4f6;
+  color: #333;
+  border: none;
+  padding: 14px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.info-block {
+  margin-bottom: 20px;
+}
+
+.info-block h3 {
+  font-size: 1rem;
+  color: #666;
+  margin: 0 0 8px 0;
+}
+
+.info-block p {
+  color: #333;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.detail-tag {
+  background: #f3f4f6;
+  color: #555;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+/* SELLER CARD */
+.seller-card-container {
+  padding: 0 20px;
+  margin-top: 10px;
+}
+
+.seller-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: white;
+  border: 1px solid #eee;
+  border-radius: 16px;
+  cursor: pointer;
+}
+
+.seller-pfp {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #eee;
+}
+
+.seller-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.seller-label {
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.seller-username {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.btn-message {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid #eee;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+}

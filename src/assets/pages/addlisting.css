@@ -1,0 +1,277 @@
+.add-listing-page {
+  padding: 16px 16px 100px 16px;
+  max-width: 600px;
+  margin: 0 auto;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.page-title {
+  margin-bottom: 24px;
+  font-size: 1.5rem;
+  color: #111;
+}
+
+.listing-form {
+  background: white;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.type-toggle {
+  display: flex;
+  background: #f3f4f6;
+  padding: 4px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.type-toggle button {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 10px;
+  font-weight: 600;
+  color: #6b7280;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.type-toggle button.active {
+  background: white;
+  color: #111;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #374151;
+}
+
+input[type="text"],
+input[type="number"],
+textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  border-color: #111;
+}
+
+.upload-btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  text-align: center;
+  border: 2px dashed #e5e7eb;
+  border-radius: 8px;
+  color: #6b7280;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.upload-btn:hover {
+  border-color: #9ca3af;
+  color: #111;
+}
+
+.image-previews {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+  overflow-x: auto;
+}
+
+.preview-thumb {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+}
+
+.preview-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.preview-thumb button {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 14px;
+  background: #111;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.submit-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.add-listing {
+  padding: 16px 16px 100px 16px;
+  max-width: 600px;
+  margin: 0 auto;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.add-form {
+  background: white;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.previews {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+  overflow-x: auto;
+}
+
+.preview {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+}
+
+.preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.preview button {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn {
+  width: 100%;
+  padding: 14px;
+  background: #111;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.listing-type {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  background: #f3f4f6;
+  padding: 4px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.listing-type input[type="radio"] {
+  margin-right: 6px;
+}
+
+/* Add to src/assets/pages/addlisting.css */
+
+.tag-input-container {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.add-tag-btn {
+    padding: 8px 16px;
+    background: #e5e7eb;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.tag-pill {
+    background: #000;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 16px;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.tag-pill button {
+    background: transparent;
+    border: none;
+    color: #ff6b6b;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1.1em;
+    padding: 0;
+    line-height: 1;
+}

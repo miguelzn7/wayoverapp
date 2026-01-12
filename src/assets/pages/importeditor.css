@@ -1,0 +1,217 @@
+.editor-page {
+  background: white;
+  min-height: 100vh;
+  padding-bottom: 150px; /* INCREASED padding to clear the footer */
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.editor-header {
+  position: sticky;
+  top: 0;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(5px);
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 20;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.progress-pill {
+  background: #f3f4f6;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #666;
+}
+
+/* CAROUSEL */
+.carousel-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4/5;
+  background: #f3f4f6;
+  margin-bottom: 20px;
+}
+
+.carousel-track {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+}
+
+.carousel-image {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  scroll-snap-align: center;
+}
+
+.image-badge {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+}
+
+/* FORM */
+.editor-form {
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.edit-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  border: none;
+  border-bottom: 2px solid transparent;
+  width: 100%;
+  outline: none;
+  padding: 4px 0;
+}
+
+.edit-title:focus { border-bottom-color: #000; }
+
+.edit-price-row {
+  display: flex;
+  align-items: center;
+  color: #10b981;
+}
+
+.dollar {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-right: 2px;
+}
+
+.edit-price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #10b981;
+  border: none;
+  outline: none;
+  width: 100%;
+}
+
+/* Desc & Enhance */
+.desc-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.desc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.desc-header label {
+  font-size: 0.9rem;
+  color: #888;
+  font-weight: 600;
+}
+
+.enhance-btn {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.edit-desc {
+  width: 100%;
+  background: #fafafa;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 12px;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  resize: none;
+  outline: none;
+}
+
+
+.edit-tag {
+  background: #f3f4f6;
+  color: #333;
+  padding: 6px 10px;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.edit-tag button {
+  border: none;
+  background: none;
+  color: #999;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 0.8;
+}
+
+
+.next-action-btn {
+  width: 100%;
+  background: black;
+  color: white;
+  border: none;
+  padding: 16px;
+  border-radius: 14px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.next-action-btn:disabled {
+  background: #666;
+}
+
+/* Force the footer to sit on top of everything */
+.editor-footer-sticky {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 20px;
+  border-top: 1px solid #eee;
+  z-index: 999; /* Force it to top */
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+}
+
+/* Ensure Tags section wraps properly */
+.tags-input-area {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+  margin-bottom: 20px; /* Add space below tags */
+}

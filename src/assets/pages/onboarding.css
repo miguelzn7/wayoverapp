@@ -1,0 +1,111 @@
+.onboarding-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  padding: 20px;
+}
+
+.onboarding-step {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  text-align: center;
+}
+
+.onboarding-input {
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  font-size: 16px;
+  outline: none;
+}
+
+.next-btn {
+  background: #000;
+  color: white;
+  padding: 15px;
+  border-radius: 12px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.back-btn {
+  background: transparent;
+  color: #666;
+  border: none;
+  cursor: pointer;
+  padding: 15px;
+}
+
+.button-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: #f0f0f0;
+}
+
+.fill {
+  height: 100%;
+  background: #4caf50;
+  transition: width 0.3s ease;
+}
+
+/* Simple animation */
+.fade-in {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Avatar Specific Styles */
+.avatar-upload-container {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 20px auto;
+  position: relative;
+  cursor: pointer;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #eee;
+  transition: border-color 0.3s;
+}
+
+.avatar-upload-container:hover {
+  border-color: #000;
+}
+
+.avatar-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-overlay {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 30px;
+  background: rgba(0,0,0,0.5);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+}

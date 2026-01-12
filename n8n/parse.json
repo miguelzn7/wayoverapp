@@ -1,0 +1,144 @@
+{
+  "name": "parse",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "parse-caption",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9ab16ecc-3986-4679-b9f4-a9a53f071d6d",
+      "name": "Webhook",
+      "webhookId": "e1cf3751-697c-4407-af9b-dd7b174a8cc0"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=SYSTEM: You are a JSON-only API. You MUST respond with ONLY a valid JSON object. No markdown, no explanation, no code blocks.\n\nTASK: Extract product details from this Instagram caption:\n\"\"\"\n{{ $json.body.caption }}\n\"\"\"\n\nEXTRACTION RULES:\n1. If text contains \"sold\", \"gone\", or \"out of stock\", set \"name\" to \"SOLD OUT\"\n2. Extract \"price\" as number only (e.g., 150000 or 150). If none found, use 0\n3. Determine \"currency\": \"IDR\" if Rp/rupiah mentioned, \"USD\" if $ mentioned, otherwise \"USD\"\n4. Create clean \"description\": Remove price info, emoji, excessive newlines. Keep condition, measurements, materials.\n5. Extract \"tags\": Colors, brands, categories, condition (vintage, new, etc.)\n\nREQUIRED OUTPUT FORMAT (NO CODE BLOCKS):\n{\"name\":\"Product Name\",\"price\":150000,\"currency\":\"IDR\",\"description\":\"Clean description here\",\"tags\":[\"vintage\",\"black\",\"jacket\"]}\n\nYOUR JSON OUTPUT:",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.8,
+      "position": [
+        208,
+        0
+      ],
+      "id": "e25c2c79-b5c4-4289-b47a-3134ad4aeac0",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        144,
+        208
+      ],
+      "id": "09430c1b-0632-4f0d-91d3-1c20a84e2131",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "SPRABZRAKZ69fid7",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        768,
+        0
+      ],
+      "id": "86b5de30-9a33-4b4a-8096-2685922937f5",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "const llmOutput = $input.first().json.text;\nconst cleaned = llmOutput.replace(/```json/g, '').replace(/```/g, '').trim();\nconst parsed = JSON.parse(cleaned);\n\nreturn [{ json: parsed }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        0
+      ],
+      "id": "1b6823ea-5bd3-4ab7-a6ed-211c41858787",
+      "name": "Code in JavaScript"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "1762b516-703a-4448-9898-6b78eb229cb8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e01649b380adb67d120dcc6e2cc74d9d551195ca52fa56fc1e0bc9e74b218f17"
+  },
+  "id": "h3hHjNAR98MKESMK",
+  "tags": []
+}

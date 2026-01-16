@@ -2,7 +2,7 @@
 .browse-page {
   /* It now lives inside the flex container, so we just style the content */
   width: 100%;
-  padding-bottom: 100px; /* Extra space at bottom so last card clears the nav bar */
+  padding-bottom: 140px; /* Extra space at bottom so last card clears the nav bar */
 }
 
 .browse-header {

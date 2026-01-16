@@ -14,8 +14,8 @@ const InstagramImport = ({ onNavigate }) => {
 
   const [selectedIds, setSelectedIds] = useState([]);
 
-  const N8N_WEBHOOK_URL = 'http://localhost:5678/webhook/fetch-insta';
-  const N8N_PARSE_URL = 'http://localhost:5678/webhook/parse-caption';
+  const N8N_WEBHOOK_URL = import.meta.env.VITE_N8N_SCRAPER_URL;
+  const N8N_PARSE_URL = import.meta.env.VITE_N8N_PARSER_URL;
 
   // batch fetch logic for smart preloading
   const handleFetch = async (e) => {

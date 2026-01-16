@@ -158,7 +158,7 @@ const ImportEditor = ({ params, onNavigate }) => {
   return (
     <div style={{ paddingBottom: '160px', maxWidth: '800px', margin: '0 auto' }}>
       
-      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid #e5e7eb', position: 'sticky', top: 0, background: 'white', zIndex: 50 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '16px 40px', borderBottom: '1px solid #e5e7eb', position: 'sticky', top: 0, background: 'white', zIndex: 50 }}>
         <button onClick={() => onNavigate('insta-import')} style={{ background: 'none', border: 'none', cursor: 'pointer' }}><ArrowLeft size={24} /></button>
         <div style={{ background: '#f3f4f6', padding: '6px 16px', borderRadius: '20px', fontSize: '0.9rem', fontWeight: '600' }}>Item {currentIndex + 1} of {queue.length}</div>
         <div style={{ width: 24 }}></div>
@@ -261,7 +261,7 @@ const ImportEditor = ({ params, onNavigate }) => {
         </div>
       </div>
 
-      <div style={{ position: 'fixed', bottom: '130px', left: 0, right: 0, display: 'flex', justifyContent: 'center', zIndex: 100, padding: '0 20px', pointerEvents: 'none' }}>
+      <div style={{ position: 'fixed', bottom: '170px', left: 0, right: 0, display: 'flex', justifyContent: 'center', zIndex: 100, padding: '0 20px', pointerEvents: 'none' }}>
         <button 
           onClick={handleNext}
           style={{

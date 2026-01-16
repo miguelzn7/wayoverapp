@@ -1,8 +1,9 @@
 /* Instructions */
+
 .swipe-page-container {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: 100%; /* Relative to page-container */
   width: 100%;
   overflow: hidden;
 }
@@ -18,37 +19,31 @@
   margin: 0;
 }
 
-/* Card Stack Container */
 .card-stack-container {
-  flex: 1;
-  padding: 0 1rem 2rem; /* Only horizontal and bottom padding */
+  flex: 1; /* This tells it to take up ALL space between instructions and footer */
+  padding: 0 1rem 8rem 1rem;
   position: relative;
   display: flex;
-  align-items: center; /* Push to top */
+  align-items: center;
   justify-content: center;
-  overflow: visible;
 }
 
 .card-stack {
   position: relative;
   width: 100%;
   max-width: 28rem;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  height: 100%; /* Now this will be the size of the container */
 }
 
-/* Card */
 .card {
   position: absolute;
   width: 100%;
-  height: 85%; /* Scale with parent */
-  min-height: 400px; /* Minimum readable size */
-  max-height: 600px; /* Cap for large screens */
+  /* Use a calculation so it doesn't touch the edges */
+  height: calc(100% - 20px); 
+  /* REMOVE max-height: 600px entirely */
   background: white;
   border-radius: 1.5rem;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
   overflow: hidden;
   z-index: 2;
 }
@@ -212,16 +207,16 @@
 }
 
 /* Pull to Refresh */
-.ptr-wrapper-custom {
-  height: 100%;
-  min-height: 0;
-  overflow-y: auto;
+.ptr-wrapper-custom, 
+.ptr-wrapper-custom > div {
+  height: 100% !important;
   display: flex;
   flex-direction: column;
 }
 
 .swipe-content-wrapper {
-  min-height: 100%;
+  flex: 1;
   display: flex;
   flex-direction: column;
+  height: 100%;
 }

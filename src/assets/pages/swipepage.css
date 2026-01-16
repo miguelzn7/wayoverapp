@@ -2,29 +2,31 @@
 .swipe-page-container {
   display: flex;
   flex-direction: column;
-  height: 100%;       /* Fill the parent .page-container height */
+  height: 100%;
   width: 100%;
-  overflow: hidden;   /* Disable scrolling for the swipe page */
+  overflow: hidden;
 }
 
 .instructions {
-  padding: 0.75rem 1.5rem;
+  padding: 1rem 1.5rem; /* Even more compact */
   text-align: center;
 }
 
 .instructions p {
   font-size: 0.875rem;
   color: #6b7280;
+  margin: 0;
 }
 
 /* Card Stack Container */
 .card-stack-container {
   flex: 1;
-  padding: 0 1rem 1rem;
+  padding: 0 1rem 2rem; /* Only horizontal and bottom padding */
   position: relative;
   display: flex;
-  align-items: center;
+  align-items: center; /* Push to top */
   justify-content: center;
+  overflow: visible;
 }
 
 .card-stack {
@@ -32,14 +34,18 @@
   width: 100%;
   max-width: 28rem;
   height: 100%;
-  max-height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Card */
 .card {
   position: absolute;
   width: 100%;
-  height: 80%;
+  height: 85%; /* Scale with parent */
+  min-height: 400px; /* Minimum readable size */
+  max-height: 600px; /* Cap for large screens */
   background: white;
   border-radius: 1.5rem;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
@@ -169,6 +175,7 @@
   margin: 0;
   opacity: 0.9;
 }
+
 /* Swipe Feedback */
 .swipe-feedback {
   position: absolute;
@@ -204,25 +211,17 @@
   }
 }
 
+/* Pull to Refresh */
 .ptr-wrapper-custom {
   height: 100%;
-  min-height: 0; /* Fix: allow flex children to scroll without collapsing */
-  overflow-y: auto; /* Required for the pull physics */
+  min-height: 0;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
 }
 
 .swipe-content-wrapper {
-  min-height: 100%; /* Ensure it pushes boundaries */
+  min-height: 100%;
   display: flex;
   flex-direction: column;
-}
-
-.card-stack {
-  position: relative;
-  width: 100%;
-  max-width: 28rem;
-  height: 100%; 
-  max-height: 800px;
-  min-height: 800px; 
 }

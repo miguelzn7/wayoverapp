@@ -16,7 +16,7 @@ const Header = ({ onNavigate }) => {
 
     return (
         <div className="header">
-            {/* ROUTES TO SELLER (Me) */}
+            {/* go to seller profile */}
             <button className="icon-btn" onClick={() => onNavigate && onNavigate('seller')}>
                 <User size={34} />
             </button>

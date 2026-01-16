@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Upload, CheckCircle, XCircle, X } from 'lucide-react';
 import './addlisting.css';
 import { supabase } from '../../lib/supabase';
+import { revokeObjectURLs } from '../../lib/utils';
 
 const AddListing = ({ onNavigate }) => {
   const [session, setSession] = useState(null);
@@ -14,7 +15,7 @@ const AddListing = ({ onNavigate }) => {
   const [tags, setTags] = useState([]);
   const [currentTag, setCurrentTag] = useState('');
 
-  // Background upload tracking
+  // track uploads happening in background
   const [uploadQueue, setUploadQueue] = useState([]);
   
   useEffect(() => {
@@ -29,6 +30,13 @@ const AddListing = ({ onNavigate }) => {
     });
     return () => (mounted = false);
   }, [onNavigate]);
+
+  // clean up object urls on unmount to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      revokeObjectURLs(previews);
+    };
+  }, [previews]);
 
   const handleAddTag = (e) => {
     e.preventDefault(); 
@@ -63,7 +71,7 @@ const AddListing = ({ onNavigate }) => {
     setPreviews((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // Background upload function
+  // background upload handler
   const uploadListingInBackground = async (listingData, uploadId) => {
     setUploadQueue(prev => [...prev, { id: uploadId, status: 'uploading', name: listingData.name }]);
     
@@ -76,7 +84,7 @@ const AddListing = ({ onNavigate }) => {
 
       const sellerName = profile?.username || session.user.email.split('@')[0];
 
-      // Upload images
+      // upload images
       const imageUrls = [];
       for (const file of listingData.files) {
         const fileExt = file.name.split('.').pop();
@@ -97,7 +105,7 @@ const AddListing = ({ onNavigate }) => {
         imageUrls.push(data.publicUrl);
       }
 
-      // Insert to database
+      // insert into database
       const table = listingData.listingType === 'live' ? 'livelistings' : 'listings';
       const dbData = {
         name: listingData.name,
@@ -114,15 +122,12 @@ const AddListing = ({ onNavigate }) => {
       const { error: dbError } = await supabase.from(table).insert([dbData]);
       if (dbError) throw dbError;
 
-      // Update status to success
+      // mark upload as successful
       setUploadQueue(prev => prev.map(item => 
         item.id === uploadId ? { ...item, status: 'success' } : item
       ));
       
-      console.log(`✅ "${listingData.name}" uploaded successfully`);
-      
     } catch (err) {
-      console.error(`❌ Upload failed for "${listingData.name}":`, err);
       setUploadQueue(prev => prev.map(item => 
         item.id === uploadId ? { ...item, status: 'error', error: err.message } : item
       ));
@@ -134,7 +139,7 @@ const AddListing = ({ onNavigate }) => {
     if (!session) return alert('You must be logged in');
     if (files.length === 0) return alert('Please add at least one image');
 
-    // Create listing data snapshot
+    // snapshot listing data before upload
     const listingData = {
       name,
       price,
@@ -144,13 +149,13 @@ const AddListing = ({ onNavigate }) => {
       listingType
     };
 
-    // Generate upload ID
+    // generate unique upload id
     const uploadId = `upload-${Date.now()}`;
 
-    // Start background upload
+    // start background upload process
     uploadListingInBackground(listingData, uploadId);
 
-    // Reset form immediately
+    // reset form for next listing
     setName('');
     setPrice('');
     setDescription('');
@@ -158,7 +163,7 @@ const AddListing = ({ onNavigate }) => {
     setFiles([]);
     setPreviews([]);
     
-    // Show success message
+    // notify user of background upload
     alert(`"${listingData.name}" is uploading in the background! You can create another listing.`);
   };
 
@@ -174,7 +179,7 @@ const AddListing = ({ onNavigate }) => {
     <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px', paddingBottom: '120px' }}>
       <h2 style={{ marginBottom: '20px' }}>Add a listing</h2>
 
-      {/* Upload Status Banner */}
+      {/* upload status tracker */}
       {uploadQueue.length > 0 && (
         <div style={{
           background: uploadingCount > 0 ? '#eff6ff' : successCount === uploadQueue.length ? '#f0fdf4' : '#fef2f2',

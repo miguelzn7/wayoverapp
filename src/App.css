@@ -4,59 +4,151 @@ html, body {
   padding: 0;
   height: 100%;
   width: 100%;
-  overflow: hidden; /* Prevent the whole browser window from scrolling */
-  touch-action: manipulation; /* Improves touch response */
+  overflow: hidden;
+  touch-action: manipulation;
+  background: #1a1a1a;
 }
 
+/* Desktop: Show phone frame */
+@media (min-width: 431px) {
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    padding: 20px;
+  }
+  
+  .app {
+    width: min(430px, 90vw) !important;
+    height: min(932px, 95vh) !important;
+    max-width: 430px;
+    max-height: 932px;
+    aspect-ratio: 430 / 932;
+    
+    border: 12px solid #000;
+    border-radius: 55px;
+    box-shadow: 
+      0 0 0 2px #3a3a3a,
+      0 20px 60px rgba(0,0,0,0.5),
+      0 0 100px rgba(0,0,0,0.3);
+    
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box !important;
+  }
+  
+  .app::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+    height: 30px;
+    background: #000;
+    border-radius: 0 0 20px 20px;
+    z-index: 9999;
+  }
+  
+  .app * {
+    box-sizing: border-box;
+  }
+}
+
+/* Tablet/Small Desktop - Remove frame, go full width */
+@media (min-width: 431px) and (max-width: 768px) {
+  body {
+    padding: 0;
+  }
+  
+  .app {
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100vw;
+    max-height: 100vh;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  
+  .app::before {
+    display: none;
+  }
+  
+  .desktop-notice {
+    display: none !important;
+  }
+}
+
+/* Mobile: Full screen, no frame */
+@media (max-width: 430px) {
+  .app {
+    width: 100vw !important;
+    height: 100dvh !important;
+    max-width: 100vw;
+    max-height: 100dvh;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  
+  .app::before {
+    display: none;
+  }
+}
+
+/* Core app structure */
 .app {
-  /* This makes the app take up exactly the full screen height */
-  height: 100dvh; /* 'dvh' handles the mobile URL bar better than 'vh' */
-  width: 100vw;
   display: flex;
   flex-direction: column;
   background: #f9fafb;
   position: relative;
-  overflow: hidden; 
+  overflow: hidden; /* This hides scrollbars */
 }
 
-/* 
-   This is the magic class. 
-   Every page (Browse, Swipe, Seller) will inherit this.
-   It tells the page to fill the empty space between Header and Footer
-   and scroll internally.
-*/
 .page-container {
-  flex: 1; /* Fill remaining space */
-  overflow-y: auto; /* Scroll vertically */
-  overflow-x: hidden; /* No side scrolling */
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
   width: 100%;
   position: relative;
-  /* Add padding so content isn't hidden behind the fixed bars */
-  /* Note: If Header/Footer are relative in flex, we might not need this, 
-     but usually safe to keep if they are 'fixed' */
+  -webkit-overflow-scrolling: touch;
 }
 
-/* Scrollbar hiding for clean UI */
+/* Hide scrollbars completely */
 .page-container::-webkit-scrollbar {
   display: none;
 }
 
+.page-container {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
 
-/* Mobile responsiveness */
-@media (max-width: 640px) {
-  .card-stack {
-    max-height: none;
+/* Desktop notice */
+.desktop-notice {
+  display: none;
+}
+
+@media (min-width: 769px) {
+  .desktop-notice {
+    display: block;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255,255,255,0.95);
+    padding: 12px 24px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: #666;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 10000;
+    backdrop-filter: blur(10px);
   }
   
-  .card-info {
-    padding: 1rem;
-  }
-  
-  .card-header h3 {
-    font-size: 1.125rem;
-  }
-  
-  .price {
-    font-size: 1.25rem;
+  .desktop-notice::after {
+    content: '📱 Best viewed on mobile or resize your browser';
   }
 }

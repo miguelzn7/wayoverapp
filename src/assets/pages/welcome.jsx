@@ -11,7 +11,7 @@ const WelcomePage = ({ onLoginSuccess }) => {
     const [error, setError] = useState(false);
     
 
-    // handle email and passwords
+    // handle email authentication and signup
     const handleEmailAuth = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -22,7 +22,7 @@ const WelcomePage = ({ onLoginSuccess }) => {
             let authResponse; 
 
             if (isSignUp) {
-                //email login try
+                // sign up with email
                 authResponse = await supabase.auth.signUp({ email, password });
             } else {
                 authResponse = await supabase.auth.signInWithPassword({ email, password });

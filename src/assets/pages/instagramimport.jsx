@@ -6,10 +6,10 @@ const InstagramImport = ({ onNavigate }) => {
   const [username, setUsername] = useState('');
   const [loading, setLoading] = useState(false);
   
-  // What the user sees on screen
+  // posts currently displayed
   const [posts, setPosts] = useState([]);
   
-  // What we have downloaded but haven't shown yet (The Buffer)
+  // posts downloaded but not yet shown
   const [buffer, setBuffer] = useState([]); 
 
   const [selectedIds, setSelectedIds] = useState([]);
@@ -17,26 +17,25 @@ const InstagramImport = ({ onNavigate }) => {
   const N8N_WEBHOOK_URL = 'http://localhost:5678/webhook/fetch-insta';
   const N8N_PARSE_URL = 'http://localhost:5678/webhook/parse-caption';
 
-  // --- BATCH FETCH LOGIC ---
+  // batch fetch logic for smart preloading
   const handleFetch = async (e) => {
     if (e) e.preventDefault();
     if (!username) return;
     
-    // 1. If we have stuff in the buffer, simply show it! (Instant Load)
+    // if buffer has items, use those first
     if (buffer.length > 0) {
-        const nextBatch = buffer.slice(0, 4); // Take next 4
-        const remainingBuffer = buffer.slice(4); // Keep the rest
+        const nextBatch = buffer.slice(0, 4);
+        const remainingBuffer = buffer.slice(4);
         
         setPosts(prev => [...prev, ...nextBatch]);
         setBuffer(remainingBuffer);
-        return; // We are done, didn't need to call server
+        return;
     }
 
-    // 2. Buffer is empty? We must call the server.
+    // buffer is empty, fetch from server
     setLoading(true);
     
-    // If it's a fresh search (posts is empty), we wipe everything.
-    // If it's a "Load More", we keep existing posts.
+    // fresh search clears posts, load more keeps them
     const isLoadMore = posts.length > 0;
     if (!isLoadMore) {
         setPosts([]);
@@ -44,10 +43,8 @@ const InstagramImport = ({ onNavigate }) => {
     }
     
     try {
-      // SMART STRATEGY: 
-      // Ask for "Current Total" + "12 New Items".
-      // We fetch a bigger batch so the user doesn't have to wait as often.
-      const BATCH_SIZE = 12; 
+      // fetch batch of posts and preload buffer for smooth scrolling
+      const BATCH_SIZE = 12;
       const currentTotal = posts.length;
       const limit = currentTotal + BATCH_SIZE;
 
@@ -60,7 +57,7 @@ const InstagramImport = ({ onNavigate }) => {
       else if (data.displayUrl) incomingPosts = [data];
 
       if (incomingPosts.length > 0) {
-        // Filter out duplicates (items we already have on screen)
+        // remove duplicate posts already on screen
         const brandNewPosts = incomingPosts.filter(
             newPost => !posts.some(existingPost => existingPost.url === newPost.url)
         );
@@ -68,10 +65,10 @@ const InstagramImport = ({ onNavigate }) => {
         if (brandNewPosts.length === 0) {
             alert("No new posts found.");
         } else {
-            // Take the first 4 for the screen
+            // show first batch to user
             const toShow = brandNewPosts.slice(0, 4);
             
-            // Save the rest for later (The Buffer)
+            // save remaining posts for preloading
             const toBuffer = brandNewPosts.slice(4);
 
             if (isLoadMore) {
@@ -193,7 +190,6 @@ const InstagramImport = ({ onNavigate }) => {
           placeholder="username" 
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          // Pass e to handleFetch
           onKeyDown={(e) => e.key === 'Enter' && handleFetch(e)}
           style={{ flex: 1, padding: '12px', fontSize: '1rem', border: '2px solid #e5e7eb', borderRadius: '8px' }}
         />
@@ -235,10 +231,8 @@ const InstagramImport = ({ onNavigate }) => {
         })}
       </div>
 
-      {/* Load More Button */}
-      {/* Show this if we have posts OR if we have hidden stuff in buffer */}
       {(posts.length > 0 || buffer.length > 0) && (
-        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '-25px' }}>
            <button
              onClick={(e) => handleFetch(e)}
              disabled={loading}

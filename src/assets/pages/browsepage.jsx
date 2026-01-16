@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { supabase } from '../../lib/supabase';
-import './browsepage.css'; 
+import './browsepage.css';
+import { parseImages } from '../../lib/utils'; 
 
 const BrowsePage = ({ params, onNavigate }) => {
   const [listings, setListings] = useState([]);
@@ -10,10 +12,9 @@ const BrowsePage = ({ params, onNavigate }) => {
 
   const POPULAR_TAGS = ['vintage', 'streetwear', 'y2k', 'denim', 'shoes', 'hoodie'];
 
-  // --- QUICK OPTIMIZER ---
+  // optimize image urls with automatic sizing and format conversion
   const optImg = (url) => {
     if (!url) return 'https://via.placeholder.com/400';
-    // Request 400px width, 80% quality, WebP format
     return `https://wsrv.nl/?url=${encodeURIComponent(url)}&w=400&q=80&output=webp`;
   };
 
@@ -39,7 +40,7 @@ const BrowsePage = ({ params, onNavigate }) => {
         if (error) throw error;
         setListings(data || []);
       } catch (err) {
-        console.error('Error loading browse:', err);
+        // Error loading browse - continue with empty state
       } finally {
         setLoading(false);
       }
@@ -48,12 +49,8 @@ const BrowsePage = ({ params, onNavigate }) => {
   }, [selectedTag, searchTerm]);
 
   const getFirstImage = (item) => {
-    try {
-      if (Array.isArray(item.images)) return item.images[0];
-      return JSON.parse(item.images)[0];
-    } catch (e) {
-      return null;
-    }
+    const images = parseImages(item.images);
+    return images.length > 0 ? images[0] : null;
   };
 
   return (
@@ -90,10 +87,9 @@ const BrowsePage = ({ params, onNavigate }) => {
             className="browse-card"
             onClick={() => onNavigate && onNavigate('listing', { item: item })}>
               <div className="image-wrapper">
-                {/* OPTIMIZED IMAGE SOURCE */}
                 <img 
                     src={optImg(getFirstImage(item))} 
-                    alt={item.name} 
+                    alt={`${item.name} - thumbnail`}
                     loading="lazy" 
                 />
                 <span className="price-tag">${item.price}</span>
@@ -112,6 +108,18 @@ const BrowsePage = ({ params, onNavigate }) => {
       </div>
     </div>
   );
+};
+
+BrowsePage.propTypes = {
+  params: PropTypes.shape({
+    search: PropTypes.string,
+  }),
+  onNavigate: PropTypes.func,
+};
+
+BrowsePage.defaultProps = {
+  params: null,
+  onNavigate: null,
 };
 
 export default BrowsePage;

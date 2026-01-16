@@ -73,19 +73,15 @@ const sampleItems = [
   }
 ];
 
-/* ClothingCard moved to src/assets/components/clothingcard.jsx */
-
 export default function App() {
-  const [currentPage, setCurrentPage] = useState('welcome'); // default entry point
-  const [session, setSession] = useState(null); 
-  const [currentSeller, setCurrentSeller] = useState(null); // FIXED: was usestate (typo)
-  const [sellerPage, setSellerPage] = useState(null);
+  const [currentPage, setCurrentPage] = useState('welcome');
+  const [session, setSession] = useState(null);
+  const [currentSeller, setCurrentSeller] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(null);
   const [pageParams, setPageParams] = useState(null);
   const [itemsTimer, setItemsTimer] = useState([]);
   const [swipeIndex, setSwipeIndex] = useState(0);
-
 
   useEffect(() => {
     // 1. Get Session on Load
@@ -117,15 +113,12 @@ export default function App() {
 
 
   const goTo = (pageName, params = null) => {
-    setCurrentPage(pageName);  
+    setCurrentPage(pageName);
     setPageParams(params);
   }
 
   const pages = {
-
     welcome: <WelcomePage onLoginSuccess={() => goTo('swipe')} />,
-
-
     swipe: <SwipePage 
               itemsTimer={itemsTimer} 
               onSetItems={setItemsTimer} 
@@ -136,17 +129,19 @@ export default function App() {
     browse: <BrowsePage params={pageParams} onNavigate={goTo} />,
     messages: <MessagesPage />,
     seller: <SellerPage params={pageParams} onNavigate={goTo} />,
-    addls: <AddListing onNavigate={goTo} />, 
+    addls: <AddListing onNavigate={goTo} />,
     'insta-import': <InstagramImport onNavigate={goTo} />,
-    'import-editor': <ImportEditor params={pageParams} onNavigate={goTo} /> ,
-    onboarding: <Onboarding onComplete={() => goTo('swipe')} />, 
+    'import-editor': <ImportEditor params={pageParams} onNavigate={goTo} />,
+    onboarding: <Onboarding onComplete={() => goTo('swipe')} />,
     listing: <ListingPage params={pageParams} onNavigate={goTo} />,
-
-
   };
 
 
  return (
+  
+  
+  <div className="desktop-notice">
+
   <div className="app">
     {/* Header stays at the top (flex item) */}
     {currentPage !== 'welcome' && <Header onNavigate={goTo} />}
@@ -162,6 +157,7 @@ export default function App() {
         ? <TabBar onNavigate={goTo} currentPage={currentPage} currentSeller={currentSeller} />
         : <MainMenu onNavigate={goTo} currentPage={currentPage} />
     )}
+  </div>
   </div>
 );
 

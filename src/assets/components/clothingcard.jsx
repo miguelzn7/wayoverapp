@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 import './clothingcard.css';
+import { CONSTANTS } from '../../lib/navigation';
 
-const ClothingCard = ({ item, onSwipe, isTop }) => {
+const ClothingCard = ({ item, onSwipe, isTop, stackPosition }) => {
     const x = useMotionValue(0);
-    const y = useTransform(x, [-200, -150, 0, 150, 200], [-150, -100, 0, -100, -150]);
+    const [swipeDirection, setSwipeDirection] = useState(null);
     const rotate = useTransform(x, [-200, 200], [-25, 25]);
     const opacity = useTransform(x, [-200, -100, 0, 100, 200], [0.5, 1, 1, 1, 0.5]);
 
@@ -18,7 +20,7 @@ const ClothingCard = ({ item, onSwipe, isTop }) => {
     const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
     const [currentImgIndex, setCurrentImgIndex] = useState(0);
 
-    // 1. Calculate Total Slides (Images + 1 for Description)
+    // calculate total slides including description slide
     const totalSlides = (item.images?.length || 0) + 1;
     const isInfoSlide = currentImgIndex === (item.images?.length || 0);
 
@@ -40,7 +42,7 @@ const ClothingCard = ({ item, onSwipe, isTop }) => {
         const cardWidth = e.currentTarget.offsetWidth;
         const clickX = e.nativeEvent.offsetX;
 
-        // Loop including the Info Slide
+        // cycle through images and description slide
         if (clickX < cardWidth / 2) {
             setCurrentImgIndex(prev => prev > 0 ? prev - 1 : totalSlides - 1);
         } else {
@@ -50,9 +52,13 @@ const ClothingCard = ({ item, onSwipe, isTop }) => {
 
     const handleDragEnd = (event, info) => {
         if (info.offset.x > 100) {
+            setSwipeDirection('right');
             onSwipe('right');
         } else if (info.offset.x < -100) {
+            setSwipeDirection('left');
             onSwipe('left');
+        } else {
+            x.set(0);
         }
     };
 
@@ -60,28 +66,41 @@ const ClothingCard = ({ item, onSwipe, isTop }) => {
         <motion.div
             style={{
                 x,
-                y,
                 rotate,
                 opacity,
                 cursor: 'grab',
                 touchAction: 'pan-y'
             }}
-            drag={isTop ? "x" : false}
-            dragConstraints={{ left: -1110, right: 1110, top: 500, bottom: -500 }}
+            animate={
+                swipeDirection === 'right'
+                ? { x: 500, opacity: 0 }
+                : swipeDirection === 'left'
+                ? { x: -500, opacity: 0 }
+                : isTop 
+                ? { scale: 1, zIndex: 10 } 
+                : stackPosition === 1
+                ? { scale: 0.985, zIndex: 9 }
+                : { scale: 0.97, zIndex: 8 }
+            }
+            transition={swipeDirection ? { duration: 0.3 } : {}}
+            drag={isTop && !swipeDirection}
+            dragElastic={0.2}
+            dragConstraints={{ left: -200, right: 200, top: 0, bottom: 0 }}
             onDragEnd={handleDragEnd}
-            animate={isTop ? { scale: 1 } : { scale: 0.985 }}
             className={`card ${!isTop ? 'card-behind' : ''}`}
-        >
+            >
             <div className="card-content">
                 <div className="card-image" onClick={handleImgClick}>
                     
-                    {/* 2. Render Image OR Info Slide */}
                     {!isInfoSlide ? (
                         <img
                             src={item.images[currentImgIndex]}
-                            alt={item.name}
+                            alt={`${item.name} - Image ${currentImgIndex + 1} of ${item.images.length}`}
                             draggable={false}
                             onDragStart={(e) => e.preventDefault()}
+                            loading="lazy"
+                            onLoad={(e) => e.target.style.opacity = 1}
+                            style={{ opacity: 0, transition: `opacity ${CONSTANTS.IMAGE_LAZY_LOAD_FADE_DURATION}ms` }}
                         />
                     ) : (
                         <div className="info-slide">
@@ -101,14 +120,13 @@ const ClothingCard = ({ item, onSwipe, isTop }) => {
                         </div>
                     )}
 
-                    {/* 3. Render Dots (Looping based on totalSlides) */}
+                    {/* render indicator dots for each slide */}
                     {totalSlides > 1 && (
                         <div className="image-dots">
                             {Array.from({ length: totalSlides }).map((_, index) => (
                                 <div
                                     key={index}
                                     className={`dot ${index === currentImgIndex ? 'active' : ''}`}
-                                    // Optional: Make the last dot (info) look slightly different?
                                     style={index === totalSlides - 1 ? { opacity: 0.8 } : {}}
                                 />
                             ))}
@@ -116,7 +134,7 @@ const ClothingCard = ({ item, onSwipe, isTop }) => {
                     )}
                 </div>
 
-                {/* 4. Hide Overlay when on Info Slide */}
+                {/* hide overlay when showing description slide */}
                 <div className={`card-info-overlay ${isInfoSlide ? 'hidden' : ''}`}>
                     <div className="timer-overlay">{formatTime(timeLeft)}</div>
                     <div className="listing-info">
@@ -128,6 +146,28 @@ const ClothingCard = ({ item, onSwipe, isTop }) => {
             </div>
         </motion.div>
     );
+};
+
+ClothingCard.propTypes = {
+  item: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    name: PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
+    seller: PropTypes.string.isRequired,
+    images: PropTypes.array.isRequired,
+    description: PropTypes.string,
+    tags: PropTypes.array,
+    timeRemaining: PropTypes.number,
+    expiryTimestamp: PropTypes.number,
+  }).isRequired,
+  onSwipe: PropTypes.func.isRequired,
+  isTop: PropTypes.bool,
+  stackPosition: PropTypes.number,
+};
+
+ClothingCard.defaultProps = {
+  isTop: false,
+  stackPosition: 0,
 };
 
 export default ClothingCard;

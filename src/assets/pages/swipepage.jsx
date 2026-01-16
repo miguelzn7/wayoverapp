@@ -1,11 +1,14 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, memo } from 'react';
+import PropTypes from 'prop-types';
 import ClothingCard from '../components/clothingcard';
 import './swipepage.css';
-import PullToRefresh from 'react-simple-pull-to-refresh'; // 1. Import Library
+import PullToRefresh from 'react-simple-pull-to-refresh';
 
 import { supabase } from '../../lib/supabase';
+import { CONSTANTS } from '../../lib/navigation';
+import { parseImages } from '../../lib/utils';
 
-// Keep sample items for fallback
+// fallback items for when database is not available
 const sampleItems = [
   {
     id: 1,
@@ -86,12 +89,7 @@ const SwipePage = ({ onSetCurrentSeller, onSetItems, itemsTimer, currentIndex, o
 
       if (!error && data) {
         const mappedItems = data.map(item => {
-          let imagesArray = [];
-          try {
-            imagesArray = Array.isArray(item.images) ? item.images : JSON.parse(item.images || "[]");
-          } catch (e) {
-            imagesArray = [item.images];
-          }
+          const imagesArray = parseImages(item.images);
 
           return {
             id: item.id,
@@ -101,7 +99,7 @@ const SwipePage = ({ onSetCurrentSeller, onSetItems, itemsTimer, currentIndex, o
             images: imagesArray,
             description: item.description, 
             tags: item.tags,
-            timeRemaining: item.timeRemaining || 900
+            timeRemaining: item.timeRemaining || CONSTANTS.DEFAULT_TIME_REMAINING
           };
         });
 
@@ -120,10 +118,9 @@ const SwipePage = ({ onSetCurrentSeller, onSetItems, itemsTimer, currentIndex, o
     }
   }, [onSetItems]);
 
-  // Update currentSeller whenever top card changes
+  // update current seller when top card changes
   useEffect(() => {
     if (itemsTimer && itemsTimer.length > 0) {
-      // Use modulo to loop forever safely
       const topCard = itemsTimer[currentIndex % itemsTimer.length];
       if (onSetCurrentSeller) {
         onSetCurrentSeller(topCard.seller);
@@ -131,7 +128,7 @@ const SwipePage = ({ onSetCurrentSeller, onSetItems, itemsTimer, currentIndex, o
     }
   }, [itemsTimer, currentIndex, onSetCurrentSeller]);
 
-  // Fetch listings on mount
+  // fetch listings on mount
   useEffect(() => {
     mountedRef.current = true;
 
@@ -146,33 +143,35 @@ const SwipePage = ({ onSetCurrentSeller, onSetItems, itemsTimer, currentIndex, o
     };
   }, [itemsTimer, fetchListings]);
 
-  // --- REVERTED SWIPE LOGIC ---
+  // handle card swipes with modulo logic for infinite looping
   const handleSwipe = (dir) => {
     setDirection(dir);
     
-    // Just simple increment. 
-    // The render logic (currentIndex % length) handles the looping visual.
     setTimeout(() => {
-      onSetIndex(prev => prev + 1);
+      onSetIndex(prev => {
+        const nextIndex = prev + 1;
+        // prevent integer overflow after many swipes by resetting at max safe integer
+        return nextIndex % Number.MAX_SAFE_INTEGER === 0 ? 0 : nextIndex;
+      });
       setDirection(null);
-    }, 300);
+    }, CONSTANTS.SWIPE_ANIMATION_DURATION);
   };
 
-  // Determine which cards to show based on modulo math
+  // get visible cards based on current index with modulo wrapping
   const visibleCards = itemsTimer && itemsTimer.length > 0
-    ? [
-        itemsTimer[currentIndex % itemsTimer.length],
-        itemsTimer[(currentIndex + 1) % itemsTimer.length]
-      ]
-    : [];
+  ? [
+      itemsTimer[currentIndex % itemsTimer.length],
+      itemsTimer[(currentIndex + 1) % itemsTimer.length],
+      itemsTimer[(currentIndex + 2) % itemsTimer.length]
+    ].slice(0, Math.min(3, itemsTimer.length))
+  : [];
 
   const handleRefresh = async () => {
-    await fetchListings(true); // Call with isRefresh = true
+    await fetchListings(true);
   };
 
     return (
     <div className="swipe-page-container">
-      {/* 4. Wrap EVERYTHING inside PullToRefresh */}
       <PullToRefresh onRefresh={handleRefresh} className="ptr-wrapper-custom">
         <div className="swipe-content-wrapper">
             
@@ -189,16 +188,17 @@ const SwipePage = ({ onSetCurrentSeller, onSetItems, itemsTimer, currentIndex, o
             {!loading && itemsTimer.length > 0 && (
                 <div className="card-stack-container">
                 <div className="card-stack">
-                    {visibleCards.map((item, index) => (
-                    <ClothingCard
-                        key={`${item.id}-${currentIndex + index}`} 
-                        item={item}
-                        onSwipe={handleSwipe}
-                        isTop={index === 0}
-                    />
-                    ))}
+                 {visibleCards.map((item, index) => (
+                 <ClothingCard
+                  key={`${item.id}-${currentIndex + index}`}
+                  item={item}
+                  onSwipe={handleSwipe}
+                  isTop={index === 0}
+                  stackPosition={index}
+    />
+                ))}
                 </div>
-                </div>
+              </div>
             )}
 
             {!loading && itemsTimer.length === 0 && (
@@ -220,6 +220,29 @@ const SwipePage = ({ onSetCurrentSeller, onSetItems, itemsTimer, currentIndex, o
       </PullToRefresh>
     </div>
   );
+};
+
+SwipePage.propTypes = {
+  onSetCurrentSeller: PropTypes.func,
+  onSetItems: PropTypes.func.isRequired,
+  itemsTimer: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    name: PropTypes.string,
+    price: PropTypes.number,
+    seller: PropTypes.string,
+    images: PropTypes.array,
+    description: PropTypes.string,
+    tags: PropTypes.array,
+    timeRemaining: PropTypes.number,
+    expiryTimestamp: PropTypes.number,
+  })),
+  currentIndex: PropTypes.number,
+  onSetIndex: PropTypes.func,
+};
+
+SwipePage.defaultProps = {
+  itemsTimer: [],
+  currentIndex: 0,
 };
 
 export default SwipePage;

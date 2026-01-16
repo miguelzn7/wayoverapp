@@ -12,10 +12,10 @@ const SellerPage = ({ params, onNavigate }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // --- OPTIMIZER ---
+  // image optimization with automatic resizing
   const optImg = (url, width) => {
     if (!url) return '';
-    if (url.includes('dicebear')) return url; // Don't optimize generated SVGs
+    if (url.includes('dicebear')) return url;
     return `https://wsrv.nl/?url=${encodeURIComponent(url)}&w=${width}&q=80&output=webp`;
   };
 
@@ -94,7 +94,7 @@ const SellerPage = ({ params, onNavigate }) => {
   return (
     <div className="seller-page">
       <header className="seller-header">
-        {/* OPTIMIZED AVATAR (w=150) */}
+        {/* seller avatar */}
         <img
           src={optImg(avatarFor(seller), 150)}
           alt="avatar"
@@ -129,7 +129,7 @@ const SellerPage = ({ params, onNavigate }) => {
             {liveListings.map((item) => (
               <div className="live-card" key={`live-${item.id}`} onClick={() => onNavigate && onNavigate('listing', { item: item })}>
                 <div className="card-image-wrap">
-                  {/* OPTIMIZED IMAGE (w=400) */}
+                  {/* live listing image */}
                   <img src={optImg(safeFirstImage(item), 400)} className="card-image" alt="item" />
                   <div className="price-badge">${item.price}</div>
                 </div>
@@ -146,7 +146,7 @@ const SellerPage = ({ params, onNavigate }) => {
             {listings.map((item) => (
               <div className="grid-card" key={`listing-${item.id}`} onClick={() => onNavigate && onNavigate('listing', { item: item })}>
                 <div className="grid-image-wrap">
-                  {/* OPTIMIZED IMAGE (w=400) */}
+                  {/* listing image */}
                   <img src={optImg(safeFirstImage(item), 400)} className="grid-image" alt="item" />
                   <div className="price-badge small">${item.price}</div>
                 </div>

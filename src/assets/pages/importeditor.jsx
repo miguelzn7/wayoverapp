@@ -31,7 +31,7 @@ const ImportEditor = ({ params, onNavigate }) => {
     setQueue(newQueue);
   };
 
-  // Tag editing
+  // tag editing
   const [currentTag, setCurrentTag] = useState('');
   const addTag = () => {
     const clean = (currentTag || '').trim().toLowerCase();
@@ -47,7 +47,7 @@ const ImportEditor = ({ params, onNavigate }) => {
     updateField('tags', existing.filter((_, i) => i !== idx));
   };
 
-  // Image removal
+  // image removal
   const removeImageAt = (idx) => {
     let images = currentItem.images;
     if (typeof images === 'string') {
@@ -56,7 +56,7 @@ const ImportEditor = ({ params, onNavigate }) => {
     if (!Array.isArray(images)) images = [];
     const newImages = images.filter((_, i) => i !== idx);
     updateField('images', newImages);
-    // adjust imageIndex
+    // update image index if needed
     if (newImages.length === 0) setImageIndex(0);
     else if (imageIndex >= newImages.length) setImageIndex(Math.max(0, newImages.length - 1));
   };
@@ -68,14 +68,12 @@ const ImportEditor = ({ params, onNavigate }) => {
     return Array.isArray(images) && images.length > 0 ? images : (currentItem.displayUrl ? [currentItem.displayUrl] : []);
   })();
 
-  // --- FAST IMAGE URL GENERATORS ---
+  // fast image url generators for optimization
   const getMainImage = (url) => {
-      // 600px width, 75% quality, WebP
       return `https://wsrv.nl/?url=${encodeURIComponent(url)}&w=600&q=75&output=webp`;
   };
 
   const getThumbImage = (url) => {
-      // 80x80 crop, 60% quality, WebP
       return `https://wsrv.nl/?url=${encodeURIComponent(url)}&w=80&h=80&fit=cover&q=60&output=webp`;
   };
 
@@ -89,7 +87,7 @@ const ImportEditor = ({ params, onNavigate }) => {
       const { data: profile } = await supabase.from('profiles').select('username').eq('id', session.user.id).maybeSingle();
       const sellerName = profile?.username || session.user.email.split('@')[0] || "Unknown";
 
-      // Upload Images
+      // upload images from item
       const uploadedImageUrls = [];
       let imagesToUpload = item.images;
       
@@ -99,7 +97,7 @@ const ImportEditor = ({ params, onNavigate }) => {
       for (let i = 0; i < imagesToUpload.length; i++) {
         const imgUrl = imagesToUpload[i];
         try {
-          // Use proxy to fetch blob safely
+          // fetch image via proxy for safe cross-origin access
           const proxyUrl = `https://wsrv.nl/?url=${encodeURIComponent(imgUrl)}&output=webp&q=80`;
           const res = await fetch(proxyUrl);
           if (!res.ok) continue;
@@ -109,7 +107,9 @@ const ImportEditor = ({ params, onNavigate }) => {
           if (upError) continue;
           const { data: urlData } = supabase.storage.from('listing-images').getPublicUrl(fileName);
           uploadedImageUrls.push(urlData.publicUrl);
-        } catch (imgError) { console.error(`Error uploading image ${i}:`, imgError); }
+        } catch (imgError) { 
+          // skip image on failure and continue with next one
+        }
       }
 
       const table = type === 'live' ? 'livelistings' : 'listings';
@@ -171,10 +171,10 @@ const ImportEditor = ({ params, onNavigate }) => {
         </div>
       )}
 
-      {/* --- OPTIMIZED CAROUSEL --- */}
+      {/* optimized carousel for image selection */}
       <div style={{ position: 'relative', width: '100%', background: '#f9fafb', marginBottom: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         
-        {/* Main Image */}
+        {/* main preview image */}
         <div style={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center' }}>
             <img 
                 src={getMainImage(displayImages[imageIndex])} 
@@ -189,7 +189,7 @@ const ImportEditor = ({ params, onNavigate }) => {
             )}
         </div>
 
-        {/* Thumbnails */}
+        {/* image thumbnails for selection */}
         {displayImages.length > 1 && (
             <div style={{ display: 'flex', gap: '8px', padding: '12px', overflowX: 'auto', maxWidth: '100%' }}>
                 {displayImages.map((img, idx) => (

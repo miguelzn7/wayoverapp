@@ -7,31 +7,30 @@ const Onboarding = ({ onComplete }) => {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [session, setSession] = useState(null);
-  const fileInputRef = useRef(null); // Reference to the hidden file input
+  const fileInputRef = useRef(null);
 
-  // Form Data State
+  // user profile form state
   const [formData, setFormData] = useState({
     username: '',
     country: '',
     location: '',
-    avatar_url: null // This will hold the URL string
+    avatar_url: null // url string for uploaded avatar
   });
   
 
   const [selectedCountryCode, setSelectedCountryCode] = useState('');
   const [selectedStateCode, setSelectedStateCode] = useState('');
 
-
-  // This holds the actual file file to upload later
+  // holds actual file to upload later
   const [avatarFile, setAvatarFile] = useState(null);
-  // This holds the preview (either the google photo or the local file blob)
+  // holds preview image (google photo or local file)
   const [previewUrl, setPreviewUrl] = useState("https://via.placeholder.com/150");
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       if (session?.user) {
-        // 1. Prefill default data from Google login if available
+        // prefill form with data from google login
         const meta = session.user.user_metadata;
         const initialAvatar = meta.avatar_url || "https://via.placeholder.com/150";
         
@@ -54,26 +53,25 @@ const Onboarding = ({ onComplete }) => {
     const countryData = Country.getCountryByCode(countryCode);
 
     setSelectedCountryCode(countryCode);
-    setSelectedStateCode(''); //reset when country change
+    setSelectedStateCode('');
     setFormData({
         ...formData,
         country: countryData.name,
-        location: '' //reset city
+        location: ''
     });
   };
 
   const handleStateChange = (e) => {
     setSelectedStateCode(e.target.value);
-    // dont save state we just need it as a city finder
   };
 
   const handleCityChange = (e) => {
     setFormData({ ...formData, location: e.target.value });
   };
 
-  // --- IMAGE HANDLING ---
+  // image upload handling
   const handleImageClick = () => {
-    fileInputRef.current.click(); // Trigger the hidden input
+    fileInputRef.current.click();
   };
 
   const handleFileChange = (e) => {
@@ -82,12 +80,12 @@ const Onboarding = ({ onComplete }) => {
     const file = e.target.files[0];
     setAvatarFile(file);
     
-    // Create a local preview immediately so it feels snappy
+    // create local preview for immediate visual feedback
     const objectUrl = URL.createObjectURL(file);
     setPreviewUrl(objectUrl);
   };
 
-  // --- SUBMIT LOGIC ---
+  // profile submission handler
   const handleFinish = async () => {
     if (!session) return;
     setLoading(true);
@@ -95,41 +93,46 @@ const Onboarding = ({ onComplete }) => {
     try {
       let finalAvatarUrl = formData.avatar_url;
 
-      // 1. If user selected a NEW file, upload it first
+      // upload new avatar if user selected one
       if (avatarFile) {
-        const fileExt = avatarFile.name.split('.').pop();
-        const fileName = `${session.user.id}-${Date.now()}.${fileExt}`;
-        const filePath = `${fileName}`;
+        try {
+          const fileExt = avatarFile.name.split('.').pop();
+          const fileName = `${session.user.id}-${Date.now()}.${fileExt}`;
+          const filePath = `${fileName}`;
 
-        // Upload to 'avatars' bucket
-        const { error: uploadError } = await supabase.storage
-          .from('avatars')
-          .upload(filePath, avatarFile);
+          // upload to avatars storage bucket
+          const { error: uploadError } = await supabase.storage
+            .from('avatars')
+            .upload(filePath, avatarFile);
 
-        if (uploadError) throw uploadError;
+          if (uploadError) throw uploadError;
 
-        // Get the public URL
-        const { data: { publicUrl } } = supabase.storage
-          .from('avatars')
-          .getPublicUrl(filePath);
-          
-        finalAvatarUrl = publicUrl;
+          // get public url for uploaded avatar
+          const { data: { publicUrl } } = supabase.storage
+            .from('avatars')
+            .getPublicUrl(filePath);
+            
+          finalAvatarUrl = publicUrl;
+        } catch (uploadErr) {
+          console.error('Avatar upload failed:', uploadErr);
+          alert('Failed to upload avatar. Profile saved without new image.');
+        }
       }
 
-      // 2. Update the Profile Table
+      // update profile in database
       const { error } = await supabase
         .from('profiles')
         .update({
           username: formData.username,
           country: formData.country,
           location: formData.location,
-          avatar_url: finalAvatarUrl, // Save the new URL
+          avatar_url: finalAvatarUrl,
         })
         .eq('id', session.user.id);
 
       if (error) throw error;
       
-      onComplete(); // Go to Swipe Page
+      onComplete();
 
     } catch (error) {
       console.error(error);
@@ -139,9 +142,9 @@ const Onboarding = ({ onComplete }) => {
     }
   };
 
-  /* --- RENDER STEPS --- */
+  // render different steps based on state
 
-  // STEP 1: Username
+  // step 1: username
   const renderStep1 = () => (
     <div className="onboarding-step fade-in">
       <h2>Let's get setup.</h2>
@@ -165,7 +168,7 @@ const Onboarding = ({ onComplete }) => {
     </div>
   );
 
-  // STEP 2: Avatar (New Step)
+  // step 2: avatar
   const renderStep2 = () => (
     <div className="onboarding-step fade-in">
       <h2>Pick a look.</h2>
@@ -176,7 +179,7 @@ const Onboarding = ({ onComplete }) => {
         <div className="avatar-overlay">📷</div>
       </div>
 
-      {/* Hidden Input */}
+      {/* hidden file input */}
       <input 
         type="file" 
         ref={fileInputRef} 
@@ -192,16 +195,16 @@ const Onboarding = ({ onComplete }) => {
     </div>
   );
 
-  // STEP 3: Location
+  // step 3: location
   const renderStep3 = () => {
-    // 1. Get our 3 allowed countries
+    // get allowed countries
     const allowedCodes = ['US', 'CA', 'ID'];
     const countries = Country.getAllCountries().filter(c => allowedCodes.includes(c.isoCode));
     
-    // 2. Get States based on selected country
+    // get states for selected country
     const states = selectedCountryCode ? State.getStatesOfCountry(selectedCountryCode) : [];
     
-    // 3. Get Cities based on selected state
+    // get cities for selected state
     const cities = selectedStateCode ? City.getCitiesOfState(selectedCountryCode, selectedStateCode) : [];
 
     return (
@@ -209,7 +212,7 @@ const Onboarding = ({ onComplete }) => {
         <h2>Where are you?</h2>
         <p>Set your shipping origin.</p>
 
-        {/* COUNTRY SELECTOR */}
+        {/* country selector */}
         <select 
           className="onboarding-input" 
           onChange={handleCountryChange}
@@ -221,7 +224,7 @@ const Onboarding = ({ onComplete }) => {
           ))}
         </select>
 
-        {/* STATE SELECTOR (Hidden until Country picked) */}
+        {/* state/province selector (appears after country selected) */}
         {selectedCountryCode && (
           <select 
             className="onboarding-input" 
@@ -236,7 +239,7 @@ const Onboarding = ({ onComplete }) => {
           </select>
         )}
 
-        {/* CITY SELECTOR (Hidden until State picked) */}
+        {/* city selector (appears after state selected) */}
         {selectedStateCode && (
           <select 
             className="onboarding-input" 

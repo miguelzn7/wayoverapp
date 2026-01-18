@@ -112,22 +112,40 @@ const ImportEditor = ({ params, onNavigate }) => {
         }
       }
 
-      const table = type === 'live' ? 'livelistings' : 'listings';
+      const table = item.table || (type === 'live' ? 'livelistings' : 'listings');
+      
       const listingData = {
         name: item.name,
         price: parseFloat(item.price),
         description: item.description || '',
         tags: Array.isArray(item.tags) ? item.tags : [],
-        images: uploadedImageUrls,
-        seller: sellerName,
-        seller_id: session.user.id,
-        created_at: new Date().toISOString(),
-        ...(type === 'live' && { timeRemaining: 900 })
+        // Only update images if actually uploaded new ones, 
+        // otherwise keep the old ones
+        ...(uploadedImageUrls.length > 0 && { images: uploadedImageUrls }),
       };
 
-      const { error: dbError } = await supabase.from(table).insert([listingData]);
-      if (dbError) throw dbError;
+      let result;
+      if (item.id) {
+        // UPDATE existing listing
+        result = await supabase
+          .from(table)
+          .update(listingData)
+          .eq('id', item.id);
+      } else {
+        // INSERT new listing (original logic)
+        result = await supabase
+          .from(table)
+          .insert([{ 
+            ...listingData, 
+            seller: sellerName, 
+            seller_id: session.user.id,
+            images: uploadedImageUrls, // Required for new listings
+            created_at: new Date().toISOString(),
+            ...(type === 'live' && { timeRemaining: 900 })
+          }]);
+      }
 
+      if (result.error) throw result.error;
       setUploadStatus(prev => ({ ...prev, [itemId]: 'success' }));
     } catch (err) {
       setUploadStatus(prev => ({ ...prev, [itemId]: 'error' }));

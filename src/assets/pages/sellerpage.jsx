@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './sellerpage.css';
 import { supabase } from '../../lib/supabase';
-import { Settings } from 'lucide-react';
+import { Settings, Trash2, Edit3 } from 'lucide-react';
 
 const SellerPage = ({ params, onNavigate }) => {
   const sellerParam = params?.seller; 
@@ -65,6 +65,40 @@ const SellerPage = ({ params, onNavigate }) => {
     };
     fetchData();
   }, [sellerParam]);
+
+  const handleDelete = async (e, itemId, isLive) => {
+    e.stopPropagation(); // Prevent navigating to the listing page
+    
+    const confirmDelete = window.confirm("Are you sure you want to delete this listing?");
+    if (!confirmDelete) return;
+
+    try {
+      const table = isLive ? 'livelistings' : 'listings';
+      const { error } = await supabase
+        .from(table)
+        .delete()
+        .eq('id', itemId);
+
+      if (error) throw error;
+
+      // Update UI optimistically
+      if (isLive) {
+        setLiveListings(prev => prev.filter(item => item.id !== itemId));
+      } else {
+        setListings(prev => prev.filter(item => item.id !== itemId));
+      }
+    } catch (err) {
+      alert("Error deleting listing: " + err.message);
+    }
+  };
+
+  const handleEdit = (e, item, isLive) => {
+    e.stopPropagation();
+    // We send it to the import-editor as an array of 1 item
+    onNavigate('import-editor', { 
+      items: [{ ...item, isEditing: true, table: isLive ? 'livelistings' : 'listings' }] 
+    });
+  };
 
   const safeFirstImage = (item) => {
     if (!item) return null;
@@ -131,6 +165,19 @@ const SellerPage = ({ params, onNavigate }) => {
                 <div className="card-image-wrap">
                   {/* live listing image */}
                   <img src={optImg(safeFirstImage(item), 400)} className="card-image" alt="item" />
+                  
+                  {/* OWNER CONTROLS */}
+                  {isOwner && (
+                    <div className="owner-controls">
+                      <button className="control-btn edit" onClick={(e) => handleEdit(e, item, true)}>
+                        <Edit3 size={16} />
+                      </button>
+                      <button className="control-btn delete" onClick={(e) => handleDelete(e, item.id, true)}>
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  )}
+                  
                   <div className="price-badge">${item.price}</div>
                 </div>
               </div>
@@ -148,6 +195,19 @@ const SellerPage = ({ params, onNavigate }) => {
                 <div className="grid-image-wrap">
                   {/* listing image */}
                   <img src={optImg(safeFirstImage(item), 400)} className="grid-image" alt="item" />
+                  
+                  {/* OWNER CONTROLS */}
+                  {isOwner && (
+                    <div className="owner-controls">
+                      <button className="control-btn edit" onClick={(e) => handleEdit(e, item, false)}>
+                        <Edit3 size={16} />
+                      </button>
+                      <button className="control-btn delete" onClick={(e) => handleDelete(e, item.id, false)}>
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  )}
+                  
                   <div className="price-badge small">${item.price}</div>
                 </div>
               </div>

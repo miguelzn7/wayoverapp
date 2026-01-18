@@ -245,7 +245,7 @@ const InstagramImport = ({ onNavigate }) => {
       )}
 
       {selectedIds.length > 0 && (
-        <div style={{ position: 'fixed', bottom: '180px', left: 0, right: 0, display: 'flex', justifyContent: 'center', zIndex: 100, padding: '0 20px', pointerEvents: 'none' }}>
+        <div style={{ position: 'fixed', bottom: '230px', left: 0, right: 0, display: 'flex', justifyContent: 'center', zIndex: 100, padding: '0 20px', pointerEvents: 'none' }}>
           <button 
             onClick={handleNext}
             disabled={loading}

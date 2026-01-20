@@ -13,9 +13,9 @@ instagram scraper demo video :
 
 Roadmap & Future Improvemennts
 
-- [ ] **Image Optimization Pipeline:** 
-- [ ] **Cloud Deployment:** 
-- [ ] **Live Demo Link:** 
+- [*] **Image Optimization Pipeline:** 
+- [*] **Cloud Deployment:** 
+- [*] **Live Demo Link:** 
 
 
 - [ ] **Swipe Logic Backend:** Connect the frontend Swipe Right action to Supabase to handle purchases.

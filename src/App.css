@@ -1,10 +1,14 @@
 /* 1. Global Reset - Lock the viewport */
-html, body {
+html,
+body {
+  /* Use dvh for modern mobile browsers */
+  height: 100dvh;
+  width: 100%;
+  overflow: hidden;
+  position: fixed;
+  /* Prevents the "bounce" scroll that breaks navs */
   margin: 0;
   padding: 0;
-  height: 100%;
-  width: 100%;
-  overflow: hidden; /* Prevent the 'bounce' scroll on the whole page */
   background: #1a1a1a;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
@@ -16,6 +20,8 @@ html, body {
 
 /* 2. SHARED APP CORE (Common to both modes) */
 .app {
+  /* Use dvh here too */
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   background: #ffffff;
@@ -26,37 +32,41 @@ html, body {
 
 /* 3. DESKTOP MODE (The Emulator) */
 @media (min-width: 1024px) {
+
   /* 1. Reset the body to be the dark backdrop */
   body {
     margin: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #2d2d2d; /* Dark background */
+    background: #2d2d2d;
+    /* Dark background */
     min-height: 100vh;
   }
 
   /* 2. Target the wrapper from your App.jsx */
   .desktop-notice {
     display: flex;
-    justify-content: center; /* This centers the phone horizontally */
-    align-items: center;     /* This centers the phone vertically */
+    justify-content: center;
+    /* This centers the phone horizontally */
+    align-items: center;
+    /* This centers the phone vertically */
     width: 100%;
     min-height: 100vh;
   }
 
   /* 3. The Phone Frame */
   .app {
-    width: 393px; 
+    width: 393px;
     height: 852px;
     border: 12px solid #000;
     border-radius: 55px;
     background: white;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
     /* Remove transform: scale if it's cutting off the top/bottom */
-    transform: scale(0.9); 
+    transform: scale(0.9);
     /* Ensure it doesn't try to flex-grow */
     flex-shrink: 0;
   }
@@ -64,14 +74,16 @@ html, body {
 
 /* 4. MOBILE / TABLET MODE (True Fullscreen) */
 @media (max-width: 1023px) {
-  .desktop-notice, #root {
+
+  .desktop-notice,
+  #root {
     width: 100%;
     height: 100%;
   }
-  
+
   .app {
     width: 100vw !important;
-    height: 100vh !important;
+    height: 100dvh !important;
     border: none !important;
     border-radius: 0 !important;
     transform: none !important;
@@ -94,4 +106,15 @@ html, body {
 /* Hide scrollbars but keep functionality */
 .page-container::-webkit-scrollbar {
   display: none;
+}
+
+/* The Fix for the Nav */
+.bottom-nav {
+  flex-shrink: 0;
+  /* env(safe-area-inset-bottom) is the secret sauce for iPhone notches */
+  padding-bottom: calc(env(safe-area-inset-bottom) + 12px);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  /* Makes it look premium/glassy */
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
 }

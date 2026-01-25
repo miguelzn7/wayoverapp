@@ -15,24 +15,11 @@ demo link:
 
 wayoverapp.vercel.app
 
-Roadmap & Future Improvemennts
+Roadmap & Future Improvements
 
-- [*] **Image Optimization Pipeline:** 
-- [*] **Cloud Deployment:** 
-- [*] **Live Demo Link:** 
-- [✓] **Image Optimization Pipeline:** 
-- [✓] **Cloud Deployment:** 
-- [✓] **Live Demo Link:** 
+- [ ] ** Multiple Payment Options: ** 
+- [ ] ** Indonesian Native Language Features: **  
 
 
-- [ ] **Swipe Logic Backend:** Connect the frontend Swipe Right action to Supabase to handle purchases.
-- [ ] **Advanced Search & Filtering:** Expand the Browse & Swipe page to support granular profile-specific filters (Size, Condition, Brand, Location) beyond simple tag matching.
-- [ ] **Comprehensive Listing Form:** Update the listing creation flow to support multi-select sizes, detailed condition grading, and shipping information for buyers and sellers.
-
-- [ ] **Payments:** Implement payment splitting to allow safe transactions between buyers and sellers.
-- [ ] **Checkout Flow:** Build a secure checkout UI for both "Swipe-to-Buy" and "Grid-Browse" purchase methods.
-- [ ] **Indonesian Native Language Features:**  Build overarching language modes for the app; with detailed guides for beginner sellers on shipping and resources.
-
-
-- [ ] **Self-Hosted Migration:** Transition the AI Backend (n8n & Ollama) from the dev environment to a dedicated **Dorm Server / Homelab**.
+- [ ] **Self-Hosted Migration:** Transition the AI Backend to a dedicated **Dorm Server / Homelab**.
     - *Goal:* Run open-source LLMs on dedicated local hardware to eliminate cloud inference costs and ensure data sovereignty.

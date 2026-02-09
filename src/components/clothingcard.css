@@ -1,33 +1,34 @@
+/* ===== Clothing Card (Swipe) - Glass ===== */
 .info-slide {
   width: 100%;
   height: 100%;
-  background: #fbfdf9;
+  background: var(--glass-bg-strong);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
   padding: 24px;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  /* Allow scrolling if text is long */
   box-sizing: border-box;
-
   touch-action: pan-y;
   user-select: none;
 }
 
 .info-slide h3 {
   margin: 0 0 8px 0;
-  font-size: 1.1rem;
-  color: #888;
+  font-size: 0.85rem;
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  font-weight: 600;
 }
 
 .info-slide p {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   line-height: 1.5;
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 24px;
   white-space: pre-wrap;
-  /* Keeps line breaks from user input */
 }
 
 .info-slide .tags-container {
@@ -37,11 +38,12 @@
 }
 
 .info-slide .tag-pill {
-  background: #f3f4f6;
-  color: #555;
-  padding: 6px 12px;
-  border-radius: 16px;
-  font-size: 0.9rem;
+  background: var(--glass-bg);
+  border: var(--glass-border-subtle);
+  color: var(--text-secondary);
+  padding: 6px 14px;
+  border-radius: 12px;
+  font-size: 0.85rem;
   font-weight: 500;
 }
 

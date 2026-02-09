@@ -1,99 +1,152 @@
+/* ===== Welcome Page — Sky Background + Glass ===== */
 .welcome-container {
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1rem;
-  background: linear-gradient(to bottom, #f9fafb, #f3f4f6);
+  background: url('/bg-sky.png') center / cover no-repeat;
+  position: relative;
+}
+
+.welcome-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.15) 100%);
+  pointer-events: none;
 }
 
 .welcome-card {
-  background: #fbfdf9;
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   width: 100%;
   max-width: 400px;
-  padding: 2.5rem;
-  border-radius: 1.5rem;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  padding: 2.5rem 2rem;
+  border-radius: 24px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
   text-align: center;
 }
 
-h1 {
-  font-size: 1.8rem;
+/* Logo */
+.welcome-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  margin-bottom: 1.25rem;
+}
+
+.welcome-logo svg {
+  width: 40px;
+  height: 40px;
+}
+
+/* Brand text */
+.welcome-title {
+  font-size: 2rem;
   font-weight: 800;
-  margin-bottom: 0.5rem;
-  color: #111;
+  line-height: 1.15;
+  color: var(--text-primary);
+  margin: 0 0 0.25rem 0;
+  letter-spacing: -0.02em;
+  text-transform: lowercase;
 }
 
-.subtitle {
-  color: #6b7280;
-  margin-bottom: 2rem;
+.welcome-subtitle {
+  font-size: 1.15rem;
+  font-style: italic;
+  color: var(--text-secondary);
+  margin: 0 0 1.75rem 0;
+  letter-spacing: 0.02em;
 }
 
+/* Inputs */
 .input-group {
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
-input {
+.welcome-card input[type="email"],
+.welcome-card input[type="password"] {
   width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 14px;
   font-size: 1rem;
   outline: none;
-  transition: border-color 0.2s;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  color: var(--text-primary);
+  box-sizing: border-box;
 }
 
-input:focus {
-  border-color: #000;
+.welcome-card input:focus {
+  border-color: var(--green-primary);
+  box-shadow: 0 0 0 3px rgba(21, 94, 49, 0.1);
 }
 
-.email-btn {
+/* Primary Button (Log In / Sign Up) */
+.btn-primary {
   width: 100%;
-  padding: 0.75rem;
-  background: #000;
+  padding: 0.85rem;
+  background: var(--green-primary);
   color: white;
   border: none;
-  border-radius: 0.5rem;
-  font-weight: 600;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 1rem;
   cursor: pointer;
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
+  transition: background var(--transition-fast), transform var(--transition-fast);
 }
 
-.divider {
-  margin: 1.5rem 0;
-  position: relative;
-  border-top: 1px solid #e5e7eb;
+.btn-primary:hover {
+  background: var(--green-dark);
 }
 
-.divider span {
-  position: absolute;
-  top: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #fbfdf9;
-  padding: 0 0.5rem;
-  color: #9ca3af;
-  font-size: 0.875rem;
+.btn-primary:active {
+  transform: scale(0.98);
 }
 
-.google-btn {
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Google Button (Glass) */
+.btn-google {
   width: 100%;
-  padding: 0.75rem;
-  background: #fbfdf9;
-  border: 1px solid #e5e7eb;
-  color: #374151;
-  border-radius: 0.5rem;
+  padding: 0.85rem;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: var(--text-primary);
+  border-radius: 14px;
   font-weight: 600;
+  font-size: 0.95rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  transition: background 0.2s;
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+  transition: background var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.google-btn:hover {
-  background: #f9fafb;
+.btn-google:hover {
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
 }
 
 .google-icon {
@@ -101,24 +154,78 @@ input:focus {
   height: 20px;
 }
 
+/* Divider */
+.divider {
+  margin: 1.25rem 0;
+  position: relative;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.divider span {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.75);
+  padding: 0 0.75rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+/* Secondary Button (Sign Up outlined) */
+.btn-secondary {
+  width: 100%;
+  padding: 0.85rem;
+  background: var(--green-primary);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.btn-secondary:hover {
+  background: var(--green-dark);
+}
+
+.btn-secondary:active {
+  transform: scale(0.98);
+}
+
+/* Toggle text */
 .toggle-text {
-  margin-top: 1.5rem;
-  font-size: 0.875rem;
-  color: #6b7280;
+  margin-top: 1.25rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
 }
 
 .toggle-text span {
-  color: #000;
+  color: var(--green-primary);
   font-weight: 600;
   cursor: pointer;
   text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
+/* Error */
 .error-message {
-  background-color: #fef2f2;
-  color: #ef4444;
-  padding: 0.5rem;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
+  background: rgba(254, 242, 242, 0.8);
+  color: var(--error-red);
+  padding: 0.6rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
   margin-bottom: 1rem;
+  border: 1px solid rgba(239, 68, 68, 0.15);
+}
+
+/* Tagline */
+.welcome-tagline {
+  margin-top: 1.5rem;
+  margin-bottom: 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  opacity: 0.8;
 }

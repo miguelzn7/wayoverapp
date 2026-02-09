@@ -1,29 +1,34 @@
+/* ===== Add Listing - Glass ===== */
 .add-listing-page {
   padding: 16px 16px 100px 16px;
   max-width: 600px;
   margin: 0 auto;
-  font-family: system-ui, -apple-system, sans-serif;
 }
 
 .page-title {
-  margin-bottom: 24px;
-  font-size: 1.5rem;
-  color: #111;
+  margin-bottom: 20px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
 .listing-form {
-  background: #fbfdf9;
+  background: var(--glass-bg-strong);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
   padding: 24px;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-radius: var(--glass-radius);
+  box-shadow: var(--glass-shadow);
 }
 
 .type-toggle {
   display: flex;
-  background: #f3f4f6;
+  background: var(--glass-bg);
   padding: 4px;
-  border-radius: 8px;
+  border-radius: 12px;
   margin-bottom: 24px;
+  border: var(--glass-border-subtle);
 }
 
 .type-toggle button {
@@ -32,16 +37,17 @@
   background: transparent;
   padding: 10px;
   font-weight: 600;
-  color: #6b7280;
-  border-radius: 6px;
+  color: var(--text-muted);
+  border-radius: 10px;
   cursor: pointer;
   transition: all 0.2s;
+  font-family: inherit;
 }
 
 .type-toggle button.active {
-  background: #fbfdf9;
-  color: #111;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  background: white;
+  color: var(--green-primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .form-group {
@@ -50,45 +56,54 @@
 
 .form-group label {
   display: block;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
   margin-bottom: 8px;
-  color: #374151;
+  color: var(--text-secondary);
 }
 
 input[type="text"],
 input[type="number"],
 textarea {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  padding: 12px 14px;
+  border: var(--glass-border);
+  border-radius: 12px;
   font-size: 1rem;
   box-sizing: border-box;
+  background: var(--glass-bg);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  color: var(--text-primary);
+  font-family: inherit;
+  transition: border-color var(--transition-fast);
 }
 
 input:focus,
 textarea:focus {
   outline: none;
-  border-color: #111;
+  border-color: var(--green-primary);
+  box-shadow: 0 0 0 3px rgba(21, 94, 49, 0.08);
 }
 
 .upload-btn {
   display: block;
   width: 100%;
-  padding: 12px;
+  padding: 14px;
   text-align: center;
-  border: 2px dashed #e5e7eb;
-  border-radius: 8px;
-  color: #6b7280;
+  border: 2px dashed rgba(21, 94, 49, 0.25);
+  border-radius: 14px;
+  color: var(--text-secondary);
   font-weight: 600;
   cursor: pointer;
-  transition: border-color 0.2s;
+  transition: all 0.2s;
+  background: var(--glass-bg);
 }
 
 .upload-btn:hover {
-  border-color: #9ca3af;
-  color: #111;
+  border-color: var(--green-primary);
+  color: var(--green-primary);
+  background: var(--green-light);
 }
 
 .image-previews {
@@ -96,6 +111,7 @@ textarea:focus {
   gap: 10px;
   margin-top: 12px;
   overflow-x: auto;
+  padding: 4px 0;
 }
 
 .preview-thumb {
@@ -109,7 +125,7 @@ textarea:focus {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 6px;
+  border-radius: 10px;
 }
 
 .preview-thumb button {
@@ -132,33 +148,42 @@ textarea:focus {
 .submit-btn {
   width: 100%;
   padding: 14px;
-  background: #111;
+  background: var(--green-primary);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 14px;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   margin-top: 10px;
+  transition: background var(--transition-fast);
+  font-family: inherit;
+}
+
+.submit-btn:hover {
+  background: var(--green-dark);
 }
 
 .submit-btn:disabled {
-  background: #9ca3af;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
+/* Duplicate class aliases used in addlisting.jsx */
 .add-listing {
   padding: 16px 16px 100px 16px;
   max-width: 600px;
   margin: 0 auto;
-  font-family: system-ui, -apple-system, sans-serif;
 }
 
 .add-form {
-  background: #fbfdf9;
+  background: var(--glass-bg-strong);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
   padding: 24px;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-radius: var(--glass-radius);
+  box-shadow: var(--glass-shadow);
 }
 
 .previews {
@@ -166,6 +191,7 @@ textarea:focus {
   gap: 10px;
   margin-top: 12px;
   overflow-x: auto;
+  padding: 4px 0;
 }
 
 .preview {
@@ -179,7 +205,7 @@ textarea:focus {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 6px;
+  border-radius: 10px;
 }
 
 .preview button {
@@ -202,18 +228,24 @@ textarea:focus {
 .btn {
   width: 100%;
   padding: 14px;
-  background: #111;
+  background: var(--green-primary);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 14px;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   margin-top: 10px;
+  transition: background var(--transition-fast);
+  font-family: inherit;
+}
+
+.btn:hover {
+  background: var(--green-dark);
 }
 
 .btn:disabled {
-  background: #9ca3af;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
@@ -221,18 +253,19 @@ textarea:focus {
   display: flex;
   gap: 8px;
   align-items: center;
-  background: #f3f4f6;
+  background: var(--glass-bg);
   padding: 4px;
-  border-radius: 8px;
+  border-radius: 12px;
   margin-bottom: 24px;
+  border: var(--glass-border-subtle);
 }
 
 .listing-type input[type="radio"] {
   margin-right: 6px;
+  accent-color: var(--green-primary);
 }
 
-/* Add to src/assets/pages/addlisting.css */
-
+/* Tags */
 .tag-input-container {
   display: flex;
   gap: 8px;
@@ -241,11 +274,19 @@ textarea:focus {
 
 .add-tag-btn {
   padding: 8px 16px;
-  background: #e5e7eb;
-  border: none;
-  border-radius: 6px;
+  background: var(--glass-bg-card);
+  border: var(--glass-border-subtle);
+  border-radius: 10px;
   cursor: pointer;
   font-weight: 600;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.add-tag-btn:hover {
+  background: var(--green-light);
+  color: var(--green-primary);
 }
 
 .tags-list {
@@ -256,9 +297,9 @@ textarea:focus {
 }
 
 .tag-pill {
-  background: #000;
+  background: var(--green-primary);
   color: white;
-  padding: 4px 10px;
+  padding: 5px 12px;
   border-radius: 16px;
   font-size: 0.85rem;
   display: flex;
@@ -269,10 +310,14 @@ textarea:focus {
 .tag-pill button {
   background: transparent;
   border: none;
-  color: #ff6b6b;
+  color: rgba(255, 255, 255, 0.7);
   font-weight: bold;
   cursor: pointer;
   font-size: 1.1em;
   padding: 0;
   line-height: 1;
+}
+
+.tag-pill button:hover {
+  color: white;
 }

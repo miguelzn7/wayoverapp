@@ -1,15 +1,53 @@
-/* 1. Global Reset - Lock the viewport */
+/* ===== DESIGN TOKENS ===== */
+:root {
+  /* Glass surfaces */
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-bg-strong: rgba(255, 255, 255, 0.78);
+  --glass-bg-card: rgba(255, 255, 255, 0.65);
+  --glass-blur: blur(16px);
+  --glass-blur-strong: blur(24px);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.4);
+  --glass-border-subtle: 1px solid rgba(255, 255, 255, 0.2);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+  --glass-shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
+  --glass-radius: 20px;
+  --glass-radius-sm: 14px;
+  --glass-radius-xs: 10px;
+
+  /* Brand colors */
+  --green-primary: #155e31;
+  --green-dark: #0f4a25;
+  --green-light: #e8f5ec;
+  --green-lighter: #f0faf3;
+  --green-accent: #1a7a3d;
+
+  /* Backgrounds */
+  --bg-page: linear-gradient(160deg, #f2f6f3 0%, #e9eeea 40%, #f0f4f1 100%);
+  --bg-surface: #fbfdf9;
+
+  /* Text */
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
+  --text-on-green: #ffffff;
+
+  /* Misc */
+  --border-light: #e5e7eb;
+  --error-red: #ef4444;
+  --transition-fast: 0.2s ease;
+  --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== 1. Global Reset ===== */
 html,
 body {
-  /* Use dvh for modern mobile browsers */
   height: 100dvh;
   width: 100%;
   overflow: hidden;
   position: fixed;
-  /* Prevents the "bounce" scroll that breaks navs */
   margin: 0;
   padding: 0;
-  background: #1a1a1a;
+  background: #e9eeea;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
@@ -18,38 +56,28 @@ body {
   width: 100%;
 }
 
-/* 2. SHARED APP CORE (Common to both modes) */
+/* ===== 2. App Shell ===== */
 .app {
-  /* Use dvh here too */
   height: 100dvh;
   display: flex;
   flex-direction: column;
-  background: #fbfdf9;
+  background: var(--bg-page);
   position: relative;
   overflow: hidden;
   box-sizing: border-box;
 }
 
-/* 3. DESKTOP MODE (The Emulator) */
-/* 3. RESPONSIVE LAYOUT */
-/* By default, .app takes full width/height (already set in SHARED APP CORE) */
+/* ===== 3. Layout Wrapper ===== */
 .desktop-notice {
   width: 100%;
   height: 100%;
 }
 
-/* Ensure body background is consistent (white or whatever the app theme is) */
-/* If you want the app content to be white but the empty space (if any) to be grey, you can adjust */
-/* For now, let's keep it simple: full screen app */
 body {
-  background: #fbfdf9;
+  background: #e9eeea;
 }
 
-/* On very large screens, you might want to constrain width IF desired, 
-   but for "properly scaled web app", we usually let it fill.
-   If specific pages need constraints, handle them in page-specific CSS. */
-
-/* 5. Page Layout - The "Lock-In" logic */
+/* ===== 4. Page Container ===== */
 .page-container {
   flex: 1;
   width: 100%;
@@ -58,22 +86,30 @@ body {
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
-  /* Smooth scrolling for mobile */
   -webkit-overflow-scrolling: touch;
 }
 
-/* Hide scrollbars but keep functionality */
 .page-container::-webkit-scrollbar {
   display: none;
 }
 
-/* The Fix for the Nav */
+/* ===== 5. Bottom Nav (Glass) ===== */
 .bottom-nav {
   flex-shrink: 0;
-  /* env(safe-area-inset-bottom) is the secret sauce for iPhone notches */
-  padding-bottom: calc(env(safe-area-inset-bottom) + 12px);
-  background: rgba(251, 253, 249, 0.85);
-  backdrop-filter: blur(10px);
-  /* Makes it look premium/glassy */
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding-bottom: calc(env(safe-area-inset-bottom) + 4px);
+  background: var(--glass-bg-strong);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-top: var(--glass-border);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.04);
+}
+
+/* ===== Utility: Glass Panel ===== */
+.glass-panel {
+  background: var(--glass-bg-card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  border-radius: var(--glass-radius);
+  box-shadow: var(--glass-shadow);
 }

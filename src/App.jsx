@@ -8,7 +8,6 @@ import SwipePage from './pages/swipepage';
 import BrowsePage from './pages/browsepage';
 import MessagesPage from './pages/messagespage';
 import SellerPage from './pages/sellerpage';
-import MainMenu from './components/mainmenu';
 import AddListing from './pages/addlisting';
 import WelcomePage from './pages/welcome';
 import Onboarding from './pages/onboarding';
@@ -151,11 +150,9 @@ export default function App() {
           {pages[currentPage] || pages.welcome}
         </div>
 
-        {/* Footer stays at the bottom (flex item) */}
+        {/* Footer — unified tab bar on all authenticated pages */}
         {currentPage !== 'welcome' && (
-          currentPage === 'swipe'
-            ? <TabBar onNavigate={goTo} currentPage={currentPage} currentSeller={currentSeller} />
-            : <MainMenu onNavigate={goTo} currentPage={currentPage} />
+          <TabBar onNavigate={goTo} currentPage={currentPage} />
         )}
       </div>
     </div>

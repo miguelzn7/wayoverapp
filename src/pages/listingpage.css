@@ -1,27 +1,31 @@
+/* ===== Listing Page - Glass ===== */
 .listing-page {
   width: 100%;
-  padding-bottom: 120px;
+  padding-bottom: 100px;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-/* Layout wrapper - single column on mobile, two columns on desktop */
+.listing-page.error {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
 .listing-layout {
   display: flex;
   flex-direction: column;
 }
 
-/* Image column */
 .listing-images {
   width: 100%;
 }
 
-/* Thumbnail strip - hidden on mobile */
 .thumbnail-strip {
   display: none;
 }
 
-/* Desktop two-column layout */
+/* Desktop */
 @media (min-width: 1024px) {
   .listing-page {
     padding: 2rem;
@@ -41,7 +45,7 @@
   }
 
   .carousel-container {
-    border-radius: 12px;
+    border-radius: 16px;
     overflow: hidden;
   }
 
@@ -57,10 +61,10 @@
     width: 60px;
     height: 60px;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
     border: 2px solid transparent;
-    transition: all 0.2s;
+    transition: all var(--transition-fast);
     opacity: 0.6;
   }
 
@@ -69,7 +73,7 @@
   }
 
   .thumbnail.active {
-    border-color: #155e31;
+    border-color: var(--green-primary);
     opacity: 1;
   }
 
@@ -83,23 +87,20 @@
   }
 }
 
-/* CAROUSEL (Snap Scroll) */
+/* Carousel */
 .carousel-container {
   position: relative;
   width: 100%;
   aspect-ratio: 4/5;
-  /* Keep the consistent shape */
-  background: #eee;
+  background: #e9eeea;
 }
 
 .carousel-track {
   display: flex;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  /* The magic snap property */
   width: 100%;
   height: 100%;
-  /* Hide scrollbar */
   scrollbar-width: none;
 }
 
@@ -109,14 +110,12 @@
 
 .carousel-image {
   flex: 0 0 100%;
-  /* Each image takes full width */
   width: 100%;
   height: 100%;
   object-fit: cover;
   scroll-snap-align: center;
 }
 
-/* Reuse the dots from your card design */
 .image-dots {
   position: absolute;
   bottom: 1rem;
@@ -131,66 +130,79 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.45);
   transition: all 0.3s;
 }
 
 .dot.active {
-  background: #fbfdf9;
+  background: white;
   transform: scale(1.2);
 }
 
-/* DETAILS */
+/* Details */
 .listing-details {
   padding: 20px;
-  background: #fbfdf9;
 }
 
 .title-row {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .title-row h1 {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: 700;
-  margin: 0 0 5px 0;
+  margin: 0 0 4px 0;
   line-height: 1.2;
+  color: var(--text-primary);
 }
 
 .price-text {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #155e31;
-  /* Green */
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--green-primary);
 }
 
-/* BUTTONS */
+/* Buttons */
 .action-buttons {
   display: flex;
-  gap: 12px;
-  margin-bottom: 25px;
+  gap: 10px;
+  margin-bottom: 24px;
 }
 
 .btn-buy {
   flex: 2;
-  background: #000;
+  background: var(--green-primary);
   color: white;
   border: none;
   padding: 14px;
-  border-radius: 12px;
-  font-weight: bold;
+  border-radius: 14px;
+  font-weight: 700;
   font-size: 1rem;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.btn-buy:hover {
+  background: var(--green-dark);
 }
 
 .btn-offer {
   flex: 1;
-  background: #f3f4f6;
-  color: #333;
-  border: none;
+  background: var(--glass-bg-card);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--green-primary);
+  border: 1px solid var(--green-primary);
   padding: 14px;
-  border-radius: 12px;
+  border-radius: 14px;
   font-weight: 600;
   font-size: 1rem;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.btn-offer:hover {
+  background: var(--green-light);
 }
 
 .info-block {
@@ -198,15 +210,17 @@
 }
 
 .info-block h3 {
-  font-size: 1rem;
-  color: #666;
-  margin: 0 0 8px 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin: 0 0 6px 0;
+  font-weight: 600;
 }
 
 .info-block p {
-  color: #333;
+  color: var(--text-primary);
   line-height: 1.5;
   margin: 0;
+  font-size: 0.95rem;
 }
 
 .tags-row {
@@ -216,14 +230,18 @@
 }
 
 .detail-tag {
-  background: #f3f4f6;
-  color: #555;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 0.9rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: var(--glass-border-subtle);
+  color: var(--text-secondary);
+  padding: 6px 14px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 500;
 }
 
-/* SELLER CARD */
+/* Seller card */
 .seller-card-container {
   padding: 0 20px;
   margin-top: 10px;
@@ -233,19 +251,26 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 16px;
-  background: #fbfdf9;
-  border: 1px solid #eee;
+  padding: 14px;
+  background: var(--glass-bg-card);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: var(--glass-border);
   border-radius: 16px;
   cursor: pointer;
+  transition: box-shadow var(--transition-fast);
+}
+
+.seller-row:hover {
+  box-shadow: var(--glass-shadow);
 }
 
 .seller-pfp {
-  width: 48px;
-  height: 48px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
   object-fit: cover;
-  background: #eee;
+  background: #e9eeea;
 }
 
 .seller-info {
@@ -255,23 +280,34 @@
 }
 
 .seller-label {
-  font-size: 0.75rem;
-  color: #888;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .seller-username {
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 0.95rem;
+  color: var(--text-primary);
 }
 
 .btn-message {
-  width: 44px;
-  height: 44px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
-  border: 1px solid #eee;
-  background: #fbfdf9;
+  border: var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #333;
+  color: var(--green-primary);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.btn-message:hover {
+  background: var(--green-light);
 }

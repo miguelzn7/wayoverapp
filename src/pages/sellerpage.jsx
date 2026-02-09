@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './sellerpage.css';
 import { supabase } from '../lib/supabase';
-import { Settings, Trash2, Edit3 } from 'lucide-react';
+import { Settings, Trash2, Edit3, Heart, ShoppingBag, Package, LogOut } from 'lucide-react';
 import OptimizedImage from '../components/OptimizedImage';
 
 const SellerPage = ({ params, onNavigate }) => {
@@ -12,8 +12,8 @@ const SellerPage = ({ params, onNavigate }) => {
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-
+  const [activeTab, setActiveTab] = useState('listings');
+  const [likedItems, setLikedItems] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -63,21 +63,15 @@ const SellerPage = ({ params, onNavigate }) => {
   }, [sellerParam]);
 
   const handleDelete = async (e, itemId, isLive) => {
-    e.stopPropagation(); // Prevent navigating to the listing page
-
+    e.stopPropagation();
     const confirmDelete = window.confirm("Are you sure you want to delete this listing?");
     if (!confirmDelete) return;
 
     try {
       const table = isLive ? 'livelistings' : 'listings';
-      const { error } = await supabase
-        .from(table)
-        .delete()
-        .eq('id', itemId);
-
+      const { error } = await supabase.from(table).delete().eq('id', itemId);
       if (error) throw error;
 
-      // Update UI optimistically
       if (isLive) {
         setLiveListings(prev => prev.filter(item => item.id !== itemId));
       } else {
@@ -90,10 +84,13 @@ const SellerPage = ({ params, onNavigate }) => {
 
   const handleEdit = (e, item, isLive) => {
     e.stopPropagation();
-    // We send it to the import-editor as an array of 1 item
     onNavigate('import-editor', {
       items: [{ ...item, isEditing: true, table: isLive ? 'livelistings' : 'listings' }]
     });
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
   };
 
   const safeFirstImage = (item) => {
@@ -117,101 +114,162 @@ const SellerPage = ({ params, onNavigate }) => {
     return `https://api.dicebear.com/6.x/identicon/svg?seed=${seed}`;
   };
 
-  if (loading) return <div className="seller-page"><p>Loading...</p></div>;
-  if (error) return <div className="seller-page"><p>{error}</p></div>;
-  if (!seller) return <div className="seller-page"><p>Seller not found.</p></div>;
+  const allListings = [...liveListings, ...listings];
+
+  if (loading) return <div className="sp-page"><div className="sp-loading">Loading...</div></div>;
+  if (error) return <div className="sp-page"><div className="sp-loading">{error}</div></div>;
+  if (!seller) return <div className="sp-page"><div className="sp-loading">Seller not found.</div></div>;
+
+  const tabs = isOwner
+    ? [
+        { id: 'liked', label: 'Liked Items' },
+        { id: 'listings', label: 'Listings' },
+        { id: 'purchases', label: 'Purchases' },
+        { id: 'settings', label: 'Settings' },
+      ]
+    : [
+        { id: 'listings', label: 'Listings' },
+      ];
 
   return (
-    <div className="seller-page">
-      <header className="seller-header">
-        {/* seller avatar */}
-        <OptimizedImage
-          src={avatarFor(seller)}
-          alt="avatar"
-          size="avatar"
-          className="seller-avatar"
-        />
-        <div className="seller-meta">
-          <h1 className="seller-name">{seller.username}</h1>
-          <div className="seller-sub">
-            <span className="seller-location">
-              {seller.location ? `${seller.location}, ${seller.country}` : seller.country || 'No Location'}
-            </span>
-            {seller.rating && <span className="seller-rating">★ {seller.rating}</span>}
+    <div className="sp-page">
+      {/* ===== Profile Header ===== */}
+      <div className="sp-header-card">
+        <div className="sp-header-top">
+          <OptimizedImage
+            src={avatarFor(seller)}
+            alt="avatar"
+            size="avatar"
+            className="sp-avatar"
+          />
+          <div className="sp-header-info">
+            <div className="sp-name-row">
+              <h1 className="sp-name">{seller.full_name || seller.username}</h1>
+              {isOwner && (
+                <button className="sp-edit-btn" onClick={() => onNavigate('onboarding')}>
+                  <Edit3 size={14} />
+                  <span>Edit</span>
+                </button>
+              )}
+            </div>
+            <p className="sp-username">@{seller.username}</p>
+            {seller.location && (
+              <p className="sp-location">
+                <span className="sp-location-dot">&#9678;</span>
+                {seller.location}{seller.country ? `, ${seller.country}` : ''}
+              </p>
+            )}
           </div>
         </div>
 
-        {isOwner && (
-          <div style={{ marginLeft: 'auto' }}>
-            <button
-              onClick={() => onNavigate('onboarding')}
-              style={{ background: '#f3f4f6', border: '1px solid #e5e7eb', padding: '8px 12px', borderRadius: '8px', fontWeight: '600', fontSize: '0.9rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
-            >
-              <Settings size={16} /> Edit Profile
+        {seller.bio && <p className="sp-bio">{seller.bio}</p>}
+
+        {/* Stats Row */}
+        <div className="sp-stats-row">
+          <div className="sp-stat-card">
+            <Package size={20} />
+            <span className="sp-stat-num">{allListings.length}</span>
+            <span className="sp-stat-label">Listings</span>
+          </div>
+          <div className="sp-stat-card">
+            <ShoppingBag size={20} />
+            <span className="sp-stat-num">0</span>
+            <span className="sp-stat-label">Sold</span>
+          </div>
+          <div className="sp-stat-card">
+            <Heart size={20} />
+            <span className="sp-stat-num">{likedItems.length}</span>
+            <span className="sp-stat-label">Likes</span>
+          </div>
+        </div>
+      </div>
+
+      {/* ===== Tabs ===== */}
+      <div className="sp-tabs">
+        {tabs.map(tab => (
+          <button
+            key={tab.id}
+            className={`sp-tab ${activeTab === tab.id ? 'active' : ''}`}
+            onClick={() => setActiveTab(tab.id)}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* ===== Tab Content ===== */}
+      <div className="sp-tab-content">
+        {/* Liked Items */}
+        {activeTab === 'liked' && (
+          <div className="sp-empty-state">
+            <Heart size={48} strokeWidth={1.5} />
+            <h3>No liked items yet</h3>
+            <p>Start browsing and like items to save them here</p>
+          </div>
+        )}
+
+        {/* Listings */}
+        {activeTab === 'listings' && (
+          allListings.length === 0 ? (
+            <div className="sp-empty-state">
+              <Package size={48} strokeWidth={1.5} />
+              <h3>No listings yet</h3>
+              <p>Start selling to see your listings here</p>
+            </div>
+          ) : (
+            <div className="sp-grid">
+              {allListings.map((item) => {
+                const isLive = liveListings.some(l => l.id === item.id);
+                return (
+                  <div className="sp-grid-card" key={`item-${item.id}`} onClick={() => onNavigate && onNavigate('listing', { item })}>
+                    <div className="sp-card-img-wrap">
+                      <OptimizedImage src={safeFirstImage(item)} size="card" className="sp-card-img" alt="item" />
+                      {isOwner && (
+                        <div className="sp-owner-controls">
+                          <button className="sp-ctrl-btn sp-ctrl-edit" onClick={(e) => handleEdit(e, item, isLive)}>
+                            <Edit3 size={14} />
+                          </button>
+                          <button className="sp-ctrl-btn sp-ctrl-del" onClick={(e) => handleDelete(e, item.id, isLive)}>
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
+                      )}
+                      {isLive && <span className="sp-live-badge">LIVE</span>}
+                      <div className="sp-price-badge">${item.price}</div>
+                    </div>
+                    <div className="sp-card-info">
+                      <span className="sp-card-title">{item.name}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )
+        )}
+
+        {/* Purchases */}
+        {activeTab === 'purchases' && (
+          <div className="sp-empty-state">
+            <ShoppingBag size={48} strokeWidth={1.5} />
+            <h3>No purchases yet</h3>
+            <p>Items you buy will show up here</p>
+          </div>
+        )}
+
+        {/* Settings */}
+        {activeTab === 'settings' && (
+          <div className="sp-settings">
+            <button className="sp-settings-btn" onClick={() => onNavigate('onboarding')}>
+              <Settings size={20} />
+              <span>Edit Profile</span>
+            </button>
+            <button className="sp-settings-btn sp-logout-btn" onClick={handleLogout}>
+              <LogOut size={20} />
+              <span>Log Out</span>
             </button>
           </div>
         )}
-      </header>
-
-      <section className="listings-section">
-        <h2 className="section-title">Live Listings</h2>
-        {liveListings.length === 0 ? <p className="empty">No live listings.</p> : (
-          <div className="live-scroller">
-            {liveListings.map((item) => (
-              <div className="live-card" key={`live-${item.id}`} onClick={() => onNavigate && onNavigate('listing', { item: item })}>
-                <div className="card-image-wrap">
-                  {/* live listing image */}
-                  <OptimizedImage src={safeFirstImage(item)} size="card" className="card-image" alt="item" />
-
-                  {/* OWNER CONTROLS */}
-                  {isOwner && (
-                    <div className="owner-controls">
-                      <button className="control-btn edit" onClick={(e) => handleEdit(e, item, true)}>
-                        <Edit3 size={16} />
-                      </button>
-                      <button className="control-btn delete" onClick={(e) => handleDelete(e, item.id, true)}>
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  )}
-
-                  <div className="price-badge">${item.price}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
-
-      <section className="listings-section">
-        <h2 className="section-title">All Listings</h2>
-        {listings.length === 0 ? <p className="empty">No listings.</p> : (
-          <div className="grid">
-            {listings.map((item) => (
-              <div className="grid-card" key={`listing-${item.id}`} onClick={() => onNavigate && onNavigate('listing', { item: item })}>
-                <div className="grid-image-wrap">
-                  {/* listing image */}
-                  <OptimizedImage src={safeFirstImage(item)} size="card" className="grid-image" alt="item" />
-
-                  {/* OWNER CONTROLS */}
-                  {isOwner && (
-                    <div className="owner-controls">
-                      <button className="control-btn edit" onClick={(e) => handleEdit(e, item, false)}>
-                        <Edit3 size={16} />
-                      </button>
-                      <button className="control-btn delete" onClick={(e) => handleDelete(e, item.id, false)}>
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  )}
-
-                  <div className="price-badge small">${item.price}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
+      </div>
     </div>
   );
 };

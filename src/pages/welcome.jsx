@@ -59,55 +59,98 @@ const WelcomePage = ({ onLoginSuccess }) => {
      return (
     <div className="welcome-container">
       <div className="welcome-card">
-        <h1>WAYOVER</h1>
-        
+        {/* Logo */}
+        <div className="welcome-logo">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+            <rect width="48" height="48" rx="12" fill="white"/>
+            <path d="M14 28L24 18L34 28" stroke="#155e31" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M20 24L28 16" stroke="#155e31" strokeWidth="3" strokeLinecap="round"/>
+            <circle cx="30" cy="14" r="2" fill="#155e31"/>
+          </svg>
+        </div>
+
+        <h1 className="welcome-title">welcome to<br/>wayover</h1>
+        <p className="welcome-subtitle">selamat datang</p>
 
         {error && <div className="error-message">{error}</div>}
 
-        <form onSubmit={handleEmailAuth}>
-          <div className="input-group">
-            <input 
-              type="email" 
-              placeholder="Email" 
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required 
-            />
-          </div>
-          <div className="input-group">
-            <input 
-              type="password" 
-              placeholder="Password" 
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required 
-            />
-          </div>
-          
-          <button type="submit" className="email-btn" disabled={loading}>
-            {loading ? 'Processing...' : (isSignUp ? 'Sign Up' : 'Log In')}
-          </button>
-        </form>
+        {!isSignUp ? (
+          <>
+            <form onSubmit={handleEmailAuth}>
+              <div className="input-group">
+                <input 
+                  type="email" 
+                  placeholder="Email" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required 
+                />
+              </div>
+              <div className="input-group">
+                <input 
+                  type="password" 
+                  placeholder="Password" 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required 
+                />
+              </div>
+              <button type="submit" className="btn-primary" disabled={loading}>
+                {loading ? 'Processing...' : 'Log In'}
+              </button>
+            </form>
 
-        <div className="divider">
-          <span>OR</span>
-        </div>
+            <button onClick={handleGoogleSignIn} className="btn-google">
+              <img 
+                src="https://www.svgrepo.com/show/475656/google-color.svg" 
+                alt="Google" 
+                className="google-icon" 
+              />
+              Log In with Google
+            </button>
 
-        <button onClick={handleGoogleSignIn} className="google-btn">
-          <img 
-            src="https://www.svgrepo.com/show/475656/google-color.svg" 
-            alt="Google" 
-            className="google-icon" 
-          />
-          Continue with Google
-        </button>
+            <div className="divider">
+              <span>or</span>
+            </div>
 
-        <p className="toggle-text">
-          {isSignUp ? "Already have an account? " : "Don't have an account? "}
-          <span onClick={() => setIsSignUp(!isSignUp)}>
-            {isSignUp ? "Log In" : "Sign Up"}
-          </span>
-        </p>
+            <button className="btn-secondary" onClick={() => setIsSignUp(true)}>
+              Sign Up
+            </button>
+          </>
+        ) : (
+          <>
+            <form onSubmit={handleEmailAuth}>
+              <div className="input-group">
+                <input 
+                  type="email" 
+                  placeholder="Email" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required 
+                />
+              </div>
+              <div className="input-group">
+                <input 
+                  type="password" 
+                  placeholder="Password" 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required 
+                />
+              </div>
+              <button type="submit" className="btn-primary" disabled={loading}>
+                {loading ? 'Processing...' : 'Sign Up'}
+              </button>
+            </form>
+
+            <p className="toggle-text">
+              Already have an account?{' '}
+              <span onClick={() => setIsSignUp(false)}>Log In</span>
+            </p>
+          </>
+        )}
+
+        <p className="welcome-tagline">Indonesian thrift finds, delivered worldwide</p>
       </div>
     </div>
   );

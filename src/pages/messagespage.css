@@ -1,0 +1,45 @@
+/* ===== Messages Page - Glass ===== */
+.messages-page {
+  padding: 20px;
+  padding-bottom: 100px;
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+}
+
+.messages-empty {
+  background: var(--glass-bg-strong);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  border-radius: var(--glass-radius);
+  padding: 48px 32px;
+  box-shadow: var(--glass-shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.messages-empty-icon {
+  font-size: 3rem;
+  opacity: 0.4;
+}
+
+.messages-empty h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.messages-empty p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin: 0;
+}

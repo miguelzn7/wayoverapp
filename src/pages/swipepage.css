@@ -1,30 +1,33 @@
-/* Instructions */
-
+/* ===== Swipe Page - Glass ===== */
 .swipe-page-container {
   display: flex;
   flex-direction: column;
   height: 100%;
-  /* Relative to page-container */
   width: 100%;
   overflow: hidden;
 }
 
 .instructions {
-  padding: 1rem 1.5rem;
-  /* Even more compact */
+  padding: 10px 1.5rem;
   text-align: center;
 }
 
 .instructions p {
-  font-size: 0.875rem;
-  color: #6b7280;
+  font-size: 0.82rem;
+  color: var(--text-muted);
   margin: 0;
+  background: var(--glass-bg-card);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: var(--glass-border);
+  display: inline-block;
+  padding: 6px 18px;
+  border-radius: 20px;
 }
 
 .card-stack-container {
   flex: 1;
-  /* This tells it to take up ALL space between instructions and footer */
-  padding: 0 1rem 8rem 1rem;
+  padding: 0 1rem 6rem 1rem;
   position: relative;
   display: flex;
   align-items: center;
@@ -36,18 +39,18 @@
   width: 100%;
   max-width: 28rem;
   height: 100%;
-  /* Now this will be the size of the container */
 }
 
 .card {
   position: absolute;
   width: 100%;
-  /* Use a calculation so it doesn't touch the edges */
   height: calc(100% - 20px);
-  /* REMOVE max-height: 600px entirely */
-  background: #fbfdf9;
-  border-radius: 1.5rem;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  background: var(--glass-bg-card);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: var(--glass-border);
+  border-radius: var(--glass-radius);
+  box-shadow: var(--glass-shadow-lg);
   overflow: hidden;
   z-index: 2;
 }
@@ -65,7 +68,7 @@
 
 .card-image {
   flex: 1;
-  background: #f3f4f6;
+  background: #e9eeea;
   position: relative;
   overflow: hidden;
 }
@@ -76,7 +79,7 @@
   object-fit: cover;
 }
 
-/* Image dots indicator */
+/* Image dots */
 .image-dots {
   position: absolute;
   bottom: 1rem;
@@ -89,16 +92,15 @@
 
 .dot {
   width: 24px;
-  height: 8px;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.5);
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.4);
   transition: all 0.3s;
 }
 
 .dot.active {
-  background: #fbfdf9;
-  width: 48px;
-  border-radius: 4px;
+  background: white;
+  width: 40px;
 }
 
 /* Overlay info */
@@ -121,8 +123,8 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 50%;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), transparent);
+  height: 40%;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.25), transparent);
   pointer-events: none;
 }
 
@@ -133,7 +135,7 @@
   left: 0;
   right: 0;
   height: 50%;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.3), transparent);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.35), transparent);
   pointer-events: none;
 }
 
@@ -192,11 +194,11 @@
 }
 
 .feedback-text.buy {
-  color: #155e31;
+  color: var(--green-primary);
 }
 
 .feedback-text.skip {
-  color: #ef4444;
+  color: var(--error-red);
 }
 
 @keyframes popIn {
@@ -204,7 +206,6 @@
     transform: scale(0.5);
     opacity: 0;
   }
-
   100% {
     transform: scale(1);
     opacity: 1;

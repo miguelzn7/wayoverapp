@@ -1,8 +1,8 @@
+/* ===== Import Editor - Glass ===== */
 .editor-page {
-  background: #fbfdf9;
+  background: var(--bg-page);
   min-height: 100vh;
   padding-bottom: 150px;
-  /* INCREASED padding to clear the footer */
   box-sizing: border-box;
   overflow-y: auto;
 }
@@ -10,31 +10,35 @@
 .editor-header {
   position: sticky;
   top: 0;
-  background: #fbfdf9;
-  backdrop-filter: blur(5px);
+  background: var(--glass-bg-strong);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
   padding: 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   z-index: 20;
-  border-bottom: 1px solid #fbfdf9;
+  border-bottom: var(--glass-border-subtle);
 }
 
 .progress-pill {
-  background: #fbfdf9;
+  background: var(--glass-bg-card);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: var(--glass-border-subtle);
   padding: 6px 16px;
   border-radius: 20px;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #666;
+  color: var(--text-secondary);
 }
 
-/* CAROUSEL */
+/* Carousel */
 .carousel-container {
   position: relative;
   width: 100%;
   aspect-ratio: 4/5;
-  background: #fbfdf9;
+  background: #e9eeea;
   margin-bottom: 20px;
 }
 
@@ -44,6 +48,11 @@
   height: 100%;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.carousel-track::-webkit-scrollbar {
+  display: none;
 }
 
 .carousel-image {
@@ -58,14 +67,17 @@
   position: absolute;
   bottom: 12px;
   right: 12px;
-  background: rgba(0, 0, 0, 0.6);
-  color: #fbfdf9;
-  padding: 4px 8px;
-  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 8px;
   font-size: 11px;
+  font-weight: 600;
 }
 
-/* FORM */
+/* Form */
 .editor-form {
   padding: 0 20px;
   display: flex;
@@ -74,23 +86,27 @@
 }
 
 .edit-title {
-  font-size: 1.5rem;
-  font-weight: 800;
+  font-size: 1.4rem;
+  font-weight: 700;
   border: none;
   border-bottom: 2px solid transparent;
   width: 100%;
   outline: none;
   padding: 4px 0;
+  background: transparent;
+  color: var(--text-primary);
+  font-family: inherit;
+  transition: border-color var(--transition-fast);
 }
 
 .edit-title:focus {
-  border-bottom-color: #000;
+  border-bottom-color: var(--green-primary);
 }
 
 .edit-price-row {
   display: flex;
   align-items: center;
-  color: #155e31;
+  color: var(--green-primary);
 }
 
 .dollar {
@@ -102,13 +118,15 @@
 .edit-price {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #155e31;
+  color: var(--green-primary);
   border: none;
   outline: none;
   width: 100%;
+  background: transparent;
+  font-family: inherit;
 }
 
-/* Desc & Enhance */
+/* Description & Enhance */
 .desc-section {
   display: flex;
   flex-direction: column;
@@ -122,29 +140,40 @@
 }
 
 .desc-header label {
-  font-size: 0.9rem;
-  color: #888;
+  font-size: 0.85rem;
+  color: var(--text-muted);
   font-weight: 600;
 }
 
 .edit-desc {
   width: 100%;
-  background: #fbfdf9;
-  border: 1px solid #eee;
-  border-radius: 12px;
-  padding: 12px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: var(--glass-border);
+  border-radius: 14px;
+  padding: 14px;
   font-family: inherit;
   font-size: 1rem;
   line-height: 1.5;
   resize: none;
   outline: none;
+  color: var(--text-primary);
+  transition: border-color var(--transition-fast);
 }
 
+.edit-desc:focus {
+  border-color: var(--green-primary);
+}
 
+/* Tags */
 .edit-tag {
-  background: #fbfdf9;
-  color: #333;
-  padding: 6px 10px;
+  background: var(--glass-bg-card);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: var(--glass-border-subtle);
+  color: var(--text-secondary);
+  padding: 6px 12px;
   border-radius: 16px;
   font-size: 0.85rem;
   display: flex;
@@ -155,54 +184,64 @@
 .edit-tag button {
   border: none;
   background: none;
-  color: #999;
+  color: var(--text-muted);
   font-size: 1.1rem;
   cursor: pointer;
   padding: 0;
   line-height: 0.8;
 }
 
-
-.next-action-btn {
-  width: 100%;
-  background: black;
-  color: white;
-  border: none;
-  padding: 16px;
-  border-radius: 14px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  cursor: pointer;
+.edit-tag button:hover {
+  color: #ef4444;
 }
 
-.next-action-btn:disabled {
-  background: #666;
-}
-
-/* Force the footer to sit on top of everything */
-.editor-footer-sticky {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #fbfdf9;
-  padding: 20px;
-  border-top: 1px solid #fbfdf9;
-  z-index: 999;
-  /* Force it to top */
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
-}
-
-/* Ensure Tags section wraps properly */
 .tags-input-area {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   margin-top: 8px;
   margin-bottom: 20px;
-  /* Add space below tags */
+}
+
+/* Action button */
+.next-action-btn {
+  width: 100%;
+  background: var(--green-primary);
+  color: white;
+  border: none;
+  padding: 16px;
+  border-radius: 14px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  font-family: inherit;
+}
+
+.next-action-btn:hover {
+  background: var(--green-dark);
+}
+
+.next-action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Sticky footer */
+.editor-footer-sticky {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--glass-bg-strong);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  padding: 16px 20px;
+  border-top: var(--glass-border-subtle);
+  z-index: 999;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
 }

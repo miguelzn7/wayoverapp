@@ -1,11 +1,12 @@
 .info-slide {
   width: 100%;
   height: 100%;
-  background: white;
+  background: #fbfdf9;
   padding: 24px;
   display: flex;
   flex-direction: column;
-  overflow-y: auto; /* Allow scrolling if text is long */
+  overflow-y: auto;
+  /* Allow scrolling if text is long */
   box-sizing: border-box;
 
   touch-action: pan-y;
@@ -25,7 +26,8 @@
   line-height: 1.5;
   color: #333;
   margin-bottom: 24px;
-  white-space: pre-wrap; /* Keeps line breaks from user input */
+  white-space: pre-wrap;
+  /* Keeps line breaks from user input */
 }
 
 .info-slide .tags-container {

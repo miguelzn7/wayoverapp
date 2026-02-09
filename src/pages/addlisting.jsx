@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Upload, CheckCircle, XCircle, X } from 'lucide-react';
 import './addlisting.css';
-import { supabase } from '../../lib/supabase';
-import { revokeObjectURLs } from '../../lib/utils';
+import { supabase } from '../lib/supabase';
+import { revokeObjectURLs } from '../lib/utils';
+import OptimizedImage from '../components/OptimizedImage';
 
 const AddListing = ({ onNavigate }) => {
   const [session, setSession] = useState(null);
@@ -17,7 +18,7 @@ const AddListing = ({ onNavigate }) => {
 
   // track uploads happening in background
   const [uploadQueue, setUploadQueue] = useState([]);
-  
+
   useEffect(() => {
     let mounted = true;
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -39,7 +40,7 @@ const AddListing = ({ onNavigate }) => {
   }, [previews]);
 
   const handleAddTag = (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
     const cleanTag = currentTag.trim().toLowerCase();
     if (!cleanTag) return;
     if (tags.length >= 5) return alert("Max 5 tags allowed");
@@ -74,7 +75,7 @@ const AddListing = ({ onNavigate }) => {
   // background upload handler
   const uploadListingInBackground = async (listingData, uploadId) => {
     setUploadQueue(prev => [...prev, { id: uploadId, status: 'uploading', name: listingData.name }]);
-    
+
     try {
       const { data: profile } = await supabase
         .from('profiles')
@@ -94,13 +95,13 @@ const AddListing = ({ onNavigate }) => {
         const { error: uploadError } = await supabase.storage
           .from('listing-images')
           .upload(filePath, file);
-          
+
         if (uploadError) throw uploadError;
 
         const { data } = supabase.storage
           .from('listing-images')
           .getPublicUrl(filePath);
-          
+
         if (!data?.publicUrl) throw new Error('Failed to get public URL');
         imageUrls.push(data.publicUrl);
       }
@@ -123,12 +124,12 @@ const AddListing = ({ onNavigate }) => {
       if (dbError) throw dbError;
 
       // mark upload as successful
-      setUploadQueue(prev => prev.map(item => 
+      setUploadQueue(prev => prev.map(item =>
         item.id === uploadId ? { ...item, status: 'success' } : item
       ));
-      
+
     } catch (err) {
-      setUploadQueue(prev => prev.map(item => 
+      setUploadQueue(prev => prev.map(item =>
         item.id === uploadId ? { ...item, status: 'error', error: err.message } : item
       ));
     }
@@ -162,7 +163,7 @@ const AddListing = ({ onNavigate }) => {
     setTags([]);
     setFiles([]);
     setPreviews([]);
-    
+
     // notify user of background upload
     alert(`"${listingData.name}" is uploading in the background! You can create another listing.`);
   };
@@ -176,29 +177,29 @@ const AddListing = ({ onNavigate }) => {
   const errorCount = uploadQueue.filter(u => u.status === 'error').length;
 
   return (
-    <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px', paddingBottom: '120px' }}>
+    <div style={{ maxWidth: '900px', margin: '0 auto', padding: '20px', paddingBottom: '120px' }}>
       <h2 style={{ marginBottom: '20px' }}>Add a listing</h2>
 
       {/* upload status tracker */}
       {uploadQueue.length > 0 && (
         <div style={{
           background: uploadingCount > 0 ? '#eff6ff' : successCount === uploadQueue.length ? '#f0fdf4' : '#fef2f2',
-          border: `2px solid ${uploadingCount > 0 ? '#3b82f6' : successCount === uploadQueue.length ? '#10b981' : '#ef4444'}`,
+          border: `2px solid ${uploadingCount > 0 ? '#3b82f6' : successCount === uploadQueue.length ? '#155e31' : '#ef4444'}`,
           borderRadius: '12px',
           padding: '16px',
           marginBottom: '24px'
         }}>
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
             gap: '12px',
             marginBottom: '12px',
             fontWeight: '600'
           }}>
             {uploadingCount > 0 && <Upload size={20} className="spin" />}
-            {uploadingCount === 0 && successCount === uploadQueue.length && <CheckCircle size={20} color="#10b981" />}
+            {uploadingCount === 0 && successCount === uploadQueue.length && <CheckCircle size={20} color="#155e31" />}
             {uploadingCount === 0 && errorCount > 0 && <XCircle size={20} color="#ef4444" />}
-            
+
             <span>
               {uploadingCount > 0 && `Uploading ${uploadingCount} listing${uploadingCount > 1 ? 's' : ''}...`}
               {uploadingCount === 0 && successCount === uploadQueue.length && `✓ All ${successCount} listing${successCount > 1 ? 's' : ''} uploaded!`}
@@ -214,17 +215,17 @@ const AddListing = ({ onNavigate }) => {
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 padding: '8px 12px',
-                background: 'white',
+                background: '#fbfdf9',
                 borderRadius: '8px',
                 fontSize: '0.9rem'
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   {item.status === 'uploading' && <Upload size={16} className="spin" />}
-                  {item.status === 'success' && <CheckCircle size={16} color="#10b981" />}
+                  {item.status === 'success' && <CheckCircle size={16} color="#155e31" />}
                   {item.status === 'error' && <XCircle size={16} color="#ef4444" />}
                   <span>{item.name}</span>
                 </div>
-                
+
                 {item.status !== 'uploading' && (
                   <button
                     onClick={() => removeFromQueue(item.id)}
@@ -247,13 +248,13 @@ const AddListing = ({ onNavigate }) => {
 
       {/* Instagram Import Button */}
       <div style={{ marginBottom: '20px' }}>
-        <button 
-          type="button" 
+        <button
+          type="button"
           onClick={() => onNavigate('insta-import')}
           style={{
             width: '100%',
             padding: '12px',
-            background: 'linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)',
+            background: '#155e31',
             color: 'white',
             border: 'none',
             borderRadius: '12px',
@@ -266,14 +267,14 @@ const AddListing = ({ onNavigate }) => {
             gap: '8px'
           }}
         >
-          📸 Import from Instagram
+          Import from Instagram
         </button>
       </div>
 
       {/* Form */}
-      <div style={{ 
-        background: 'white', 
-        padding: '24px', 
+      <div style={{
+        background: '#fbfdf9',
+        padding: '24px',
         borderRadius: '12px',
         boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
       }}>
@@ -281,9 +282,9 @@ const AddListing = ({ onNavigate }) => {
           <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600' }}>
             Title
           </label>
-          <input 
-            value={name} 
-            onChange={(e) => setName(e.target.value)} 
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             required
             style={{
               width: '100%',
@@ -299,11 +300,11 @@ const AddListing = ({ onNavigate }) => {
           <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600' }}>
             Price
           </label>
-          <input 
-            value={price} 
-            onChange={(e) => setPrice(e.target.value)} 
-            required 
-            type="number" 
+          <input
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            required
+            type="number"
             step="0.01"
             style={{
               width: '100%',
@@ -319,9 +320,9 @@ const AddListing = ({ onNavigate }) => {
           <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600' }}>
             Description
           </label>
-          <textarea 
-            value={description} 
-            onChange={(e) => setDescription(e.target.value)} 
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
             rows={3}
             style={{
               width: '100%',
@@ -339,7 +340,7 @@ const AddListing = ({ onNavigate }) => {
             Tags (Optional, max 5)
           </label>
           <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
-            <input 
+            <input
               value={currentTag}
               onChange={(e) => setCurrentTag(e.target.value)}
               onKeyDown={handleKeyDown}
@@ -353,14 +354,14 @@ const AddListing = ({ onNavigate }) => {
                 fontSize: '1rem'
               }}
             />
-            <button 
+            <button
               type="button"
               onClick={handleAddTag}
               disabled={tags.length >= 5 || !currentTag.trim()}
               style={{
                 padding: '10px 20px',
-                background: '#10b981',
-                color: 'white',
+                background: '#155e31',
+                color: '#fbfdf9',
                 border: 'none',
                 borderRadius: '8px',
                 cursor: 'pointer',
@@ -370,10 +371,10 @@ const AddListing = ({ onNavigate }) => {
               Add
             </button>
           </div>
-          
+
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
             {tags.map((tag, idx) => (
-              <span 
+              <span
                 key={idx}
                 style={{
                   background: '#f3f4f6',
@@ -386,8 +387,8 @@ const AddListing = ({ onNavigate }) => {
                 }}
               >
                 #{tag}
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   onClick={() => removeTag(tag)}
                   style={{
                     background: 'none',
@@ -411,22 +412,22 @@ const AddListing = ({ onNavigate }) => {
           </label>
           <div style={{ display: 'flex', gap: '16px' }}>
             <label style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <input 
-                type="radio" 
-                name="type" 
-                value="regular" 
-                checked={listingType === 'regular'} 
-                onChange={() => setListingType('regular')} 
+              <input
+                type="radio"
+                name="type"
+                value="regular"
+                checked={listingType === 'regular'}
+                onChange={() => setListingType('regular')}
               />
               Regular
             </label>
             <label style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <input 
-                type="radio" 
-                name="type" 
-                value="live" 
-                checked={listingType === 'live'} 
-                onChange={() => setListingType('live')} 
+              <input
+                type="radio"
+                name="type"
+                value="live"
+                checked={listingType === 'live'}
+                onChange={() => setListingType('live')}
               />
               Live
             </label>
@@ -437,10 +438,10 @@ const AddListing = ({ onNavigate }) => {
           <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600' }}>
             Photos
           </label>
-          <input 
-            type="file" 
-            multiple 
-            accept="image/*" 
+          <input
+            type="file"
+            multiple
+            accept="image/*"
             onChange={handleFileChange}
             style={{
               width: '100%',
@@ -452,17 +453,18 @@ const AddListing = ({ onNavigate }) => {
         </div>
 
         {previews.length > 0 && (
-          <div style={{ 
-            display: 'grid', 
+          <div style={{
+            display: 'grid',
             gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))',
             gap: '12px',
             marginBottom: '20px'
           }}>
             {previews.map((src, idx) => (
               <div key={idx} style={{ position: 'relative' }}>
-                <img 
-                  src={src} 
+                <OptimizedImage
+                  src={src}
                   alt={`preview-${idx}`}
+                  size="thumbnail"
                   style={{
                     width: '100%',
                     height: '120px',
@@ -470,8 +472,8 @@ const AddListing = ({ onNavigate }) => {
                     borderRadius: '8px'
                   }}
                 />
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   onClick={() => removeImg(idx)}
                   style={{
                     position: 'absolute',
@@ -496,14 +498,14 @@ const AddListing = ({ onNavigate }) => {
           </div>
         )}
 
-        <button 
+        <button
           type="button"
           onClick={handleSubmit}
           style={{
             width: '100%',
             padding: '14px',
-            background: '#10b981',
-            color: 'white',
+            background: '#155e31',
+            color: '#fbfdf9',
             border: 'none',
             borderRadius: '8px',
             fontSize: '1rem',

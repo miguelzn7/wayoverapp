@@ -1,7 +1,8 @@
 .editor-page {
-  background: white;
+  background: #fbfdf9;
   min-height: 100vh;
-  padding-bottom: 150px; /* INCREASED padding to clear the footer */
+  padding-bottom: 150px;
+  /* INCREASED padding to clear the footer */
   box-sizing: border-box;
   overflow-y: auto;
 }
@@ -9,18 +10,18 @@
 .editor-header {
   position: sticky;
   top: 0;
-  background: rgba(255,255,255,0.95);
+  background: #fbfdf9;
   backdrop-filter: blur(5px);
   padding: 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   z-index: 20;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid #fbfdf9;
 }
 
 .progress-pill {
-  background: #f3f4f6;
+  background: #fbfdf9;
   padding: 6px 16px;
   border-radius: 20px;
   font-size: 0.85rem;
@@ -33,7 +34,7 @@
   position: relative;
   width: 100%;
   aspect-ratio: 4/5;
-  background: #f3f4f6;
+  background: #fbfdf9;
   margin-bottom: 20px;
 }
 
@@ -57,8 +58,8 @@
   position: absolute;
   bottom: 12px;
   right: 12px;
-  background: rgba(0,0,0,0.6);
-  color: white;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fbfdf9;
   padding: 4px 8px;
   border-radius: 6px;
   font-size: 11px;
@@ -82,12 +83,14 @@
   padding: 4px 0;
 }
 
-.edit-title:focus { border-bottom-color: #000; }
+.edit-title:focus {
+  border-bottom-color: #000;
+}
 
 .edit-price-row {
   display: flex;
   align-items: center;
-  color: #10b981;
+  color: #155e31;
 }
 
 .dollar {
@@ -99,7 +102,7 @@
 .edit-price {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #10b981;
+  color: #155e31;
   border: none;
   outline: none;
   width: 100%;
@@ -124,23 +127,9 @@
   font-weight: 600;
 }
 
-.enhance-btn {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 12px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-}
-
 .edit-desc {
   width: 100%;
-  background: #fafafa;
+  background: #fbfdf9;
   border: 1px solid #eee;
   border-radius: 12px;
   padding: 12px;
@@ -153,7 +142,7 @@
 
 
 .edit-tag {
-  background: #f3f4f6;
+  background: #fbfdf9;
   color: #333;
   padding: 6px 10px;
   border-radius: 16px;
@@ -200,11 +189,12 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: white;
+  background: #fbfdf9;
   padding: 20px;
-  border-top: 1px solid #eee;
-  z-index: 999; /* Force it to top */
-  box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+  border-top: 1px solid #fbfdf9;
+  z-index: 999;
+  /* Force it to top */
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
 }
 
 /* Ensure Tags section wraps properly */
@@ -213,5 +203,6 @@
   flex-wrap: wrap;
   gap: 8px;
   margin-top: 8px;
-  margin-bottom: 20px; /* Add space below tags */
+  margin-bottom: 20px;
+  /* Add space below tags */
 }

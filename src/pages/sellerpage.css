@@ -3,6 +3,10 @@
   flex: 1;
   width: 100%;
   overflow-y: auto;
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE/Edge */
 
   padding: 16px;
   max-width: 1100px;
@@ -54,6 +58,10 @@
   gap: 12px;
   overflow-x: auto;
   padding-bottom: 6px;
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE/Edge */
 }
 
 .live-card {
@@ -61,7 +69,7 @@
   width: 110px;
   border-radius: 8px;
   background: #fff;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
   overflow: hidden;
 }
 
@@ -82,7 +90,7 @@
   position: absolute;
   right: 8px;
   bottom: 8px;
-  background: rgba(0,0,0,0.7);
+  background: rgba(0, 0, 0, 0.7);
   color: #fff;
   padding: 6px 8px;
   border-radius: 12px;
@@ -106,7 +114,7 @@
   background: #fff;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
 }
 
 .owner-controls {
@@ -127,7 +135,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   transition: transform 0.1s;
 }
 
@@ -161,7 +169,7 @@
   display: block;
 }
 
-.price-badge.small { 
+.price-badge.small {
   right: 6px;
   bottom: 6px;
   padding: 4px 6px;
@@ -170,7 +178,18 @@
 }
 
 
-.empty { color: #666; padding: 8px 0; }
+.empty {
+  color: #666;
+  padding: 8px 0;
+}
 
 /* make horizontal scroller a bit nicer on touch */
-.live-scroller { -webkit-overflow-scrolling: touch; }
+.live-scroller {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Hide scrollbar for Chrome/Safari/Opera */
+.seller-page::-webkit-scrollbar,
+.live-scroller::-webkit-scrollbar {
+  display: none;
+}

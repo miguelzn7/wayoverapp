@@ -1,29 +1,115 @@
 .listing-page {
   width: 100%;
   padding-bottom: 120px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Layout wrapper - single column on mobile, two columns on desktop */
+.listing-layout {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Image column */
+.listing-images {
+  width: 100%;
+}
+
+/* Thumbnail strip - hidden on mobile */
+.thumbnail-strip {
+  display: none;
+}
+
+/* Desktop two-column layout */
+@media (min-width: 1024px) {
+  .listing-page {
+    padding: 2rem;
+    padding-bottom: 60px;
+  }
+
+  .listing-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .listing-images {
+    position: sticky;
+    top: 2rem;
+  }
+
+  .carousel-container {
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .thumbnail-strip {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    overflow-x: auto;
+    padding: 4px 0;
+  }
+
+  .thumbnail {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    opacity: 0.6;
+  }
+
+  .thumbnail:hover {
+    opacity: 0.9;
+  }
+
+  .thumbnail.active {
+    border-color: #155e31;
+    opacity: 1;
+  }
+
+  .listing-details {
+    padding: 0;
+  }
+
+  .seller-card-container {
+    padding: 0;
+    margin-top: 24px;
+  }
 }
 
 /* CAROUSEL (Snap Scroll) */
 .carousel-container {
   position: relative;
   width: 100%;
-  aspect-ratio: 4/5; /* Keep the consistent shape */
+  aspect-ratio: 4/5;
+  /* Keep the consistent shape */
   background: #eee;
 }
 
 .carousel-track {
   display: flex;
   overflow-x: auto;
-  scroll-snap-type: x mandatory; /* The magic snap property */
+  scroll-snap-type: x mandatory;
+  /* The magic snap property */
   width: 100%;
   height: 100%;
   /* Hide scrollbar */
   scrollbar-width: none;
 }
-.carousel-track::-webkit-scrollbar { display: none; }
+
+.carousel-track::-webkit-scrollbar {
+  display: none;
+}
 
 .carousel-image {
-  flex: 0 0 100%; /* Each image takes full width */
+  flex: 0 0 100%;
+  /* Each image takes full width */
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -50,14 +136,14 @@
 }
 
 .dot.active {
-  background: white;
+  background: #fbfdf9;
   transform: scale(1.2);
 }
 
 /* DETAILS */
 .listing-details {
   padding: 20px;
-  background: white;
+  background: #fbfdf9;
 }
 
 .title-row {
@@ -74,7 +160,8 @@
 .price-text {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #10b981; /* Green */
+  color: #155e31;
+  /* Green */
 }
 
 /* BUTTONS */
@@ -147,7 +234,7 @@
   align-items: center;
   gap: 12px;
   padding: 16px;
-  background: white;
+  background: #fbfdf9;
   border: 1px solid #eee;
   border-radius: 16px;
   cursor: pointer;
@@ -182,7 +269,7 @@
   height: 44px;
   border-radius: 50%;
   border: 1px solid #eee;
-  background: white;
+  background: #fbfdf9;
   display: flex;
   align-items: center;
   justify-content: center;

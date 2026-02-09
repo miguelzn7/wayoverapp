@@ -3,13 +3,15 @@
 .swipe-page-container {
   display: flex;
   flex-direction: column;
-  height: 100%; /* Relative to page-container */
+  height: 100%;
+  /* Relative to page-container */
   width: 100%;
   overflow: hidden;
 }
 
 .instructions {
-  padding: 1rem 1.5rem; /* Even more compact */
+  padding: 1rem 1.5rem;
+  /* Even more compact */
   text-align: center;
 }
 
@@ -20,7 +22,8 @@
 }
 
 .card-stack-container {
-  flex: 1; /* This tells it to take up ALL space between instructions and footer */
+  flex: 1;
+  /* This tells it to take up ALL space between instructions and footer */
   padding: 0 1rem 8rem 1rem;
   position: relative;
   display: flex;
@@ -32,18 +35,19 @@
   position: relative;
   width: 100%;
   max-width: 28rem;
-  height: 100%; /* Now this will be the size of the container */
+  height: 100%;
+  /* Now this will be the size of the container */
 }
 
 .card {
   position: absolute;
   width: 100%;
   /* Use a calculation so it doesn't touch the edges */
-  height: calc(100% - 20px); 
+  height: calc(100% - 20px);
   /* REMOVE max-height: 600px entirely */
-  background: white;
+  background: #fbfdf9;
   border-radius: 1.5rem;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   z-index: 2;
 }
@@ -92,7 +96,7 @@
 }
 
 .dot.active {
-  background: white;
+  background: #fbfdf9;
   width: 48px;
   border-radius: 4px;
 }
@@ -118,7 +122,7 @@
   left: 0;
   right: 0;
   height: 50%;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.3), transparent);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), transparent);
   pointer-events: none;
 }
 
@@ -129,7 +133,7 @@
   left: 0;
   right: 0;
   height: 50%;
-  background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.3), transparent);
   pointer-events: none;
 }
 
@@ -188,7 +192,7 @@
 }
 
 .feedback-text.buy {
-  color: #10b981;
+  color: #155e31;
 }
 
 .feedback-text.skip {
@@ -200,6 +204,7 @@
     transform: scale(0.5);
     opacity: 0;
   }
+
   100% {
     transform: scale(1);
     opacity: 1;
@@ -207,8 +212,8 @@
 }
 
 /* Pull to Refresh */
-.ptr-wrapper-custom, 
-.ptr-wrapper-custom > div {
+.ptr-wrapper-custom,
+.ptr-wrapper-custom>div {
   height: 100% !important;
   display: flex;
   flex-direction: column;

@@ -17,9 +17,7 @@ wayoverapp.vercel.app
 
 Roadmap & Future Improvemennts
 
-- [*] **Image Optimization Pipeline:** 
-- [*] **Cloud Deployment:** 
-- [*] **Live Demo Link:** 
+
 - [✓] **Image Optimization Pipeline:** 
 - [✓] **Cloud Deployment:** 
 - [✓] **Live Demo Link:** 

@@ -8,7 +8,7 @@
 }
 
 .welcome-card {
-  background: white;
+  background: #fbfdf9;
   width: 100%;
   max-width: 400px;
   padding: 2.5rem;
@@ -70,7 +70,7 @@ input:focus {
   top: -10px;
   left: 50%;
   transform: translateX(-50%);
-  background: white;
+  background: #fbfdf9;
   padding: 0 0.5rem;
   color: #9ca3af;
   font-size: 0.875rem;
@@ -79,7 +79,7 @@ input:focus {
 .google-btn {
   width: 100%;
   padding: 0.75rem;
-  background: white;
+  background: #fbfdf9;
   border: 1px solid #e5e7eb;
   color: #374151;
   border-radius: 0.5rem;

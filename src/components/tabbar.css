@@ -5,7 +5,7 @@
   right: 0;
   width: 100%;
   z-index: 100;
-  background: white;
+  background: #fbfdf9;
   border-top: 1px solid #e5e7eb;
   padding: 1rem 2rem;
 }
@@ -14,7 +14,9 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
-  max-width: 28rem;
+  max-width: 600px;
+  /* Increased from 28rem (approx 448px) to 600px for a bit more breathing room on desktop, but still centered */
+  width: 100%;
   margin: 0 auto;
 }
 
@@ -37,14 +39,14 @@
   background: #cbcbcd;
 }
 
-.nav-btn-add {
-  background: #10b981;
-  color: white;
+.nav-btn-home {
+  background: #155e31;
+  color: #fbfdf9;
   padding: 2rem;
-  box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 10px 15px -3px rgba(21, 94, 49, 0.3);
   top: 0;
 }
 
-.nav-btn-add:hover {
-  background: #059669;
+.nav-btn-home:hover {
+  background: #0f4a25;
 }

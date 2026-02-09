@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 import './clothingcard.css';
-import { CONSTANTS } from '../../lib/navigation';
+import { CONSTANTS } from '../lib/navigation';
+import OptimizedImage from './OptimizedImage';
 
 const ClothingCard = ({ item, onSwipe, isTop, stackPosition }) => {
     const x = useMotionValue(0);
@@ -73,14 +74,14 @@ const ClothingCard = ({ item, onSwipe, isTop, stackPosition }) => {
             }}
             animate={
                 swipeDirection === 'right'
-                ? { x: 500, opacity: 0 }
-                : swipeDirection === 'left'
-                ? { x: -500, opacity: 0 }
-                : isTop 
-                ? { scale: 1, zIndex: 10 } 
-                : stackPosition === 1
-                ? { scale: 0.985, zIndex: 9 }
-                : { scale: 0.97, zIndex: 8 }
+                    ? { x: 500, opacity: 0 }
+                    : swipeDirection === 'left'
+                        ? { x: -500, opacity: 0 }
+                        : isTop
+                            ? { scale: 1, zIndex: 10 }
+                            : stackPosition === 1
+                                ? { scale: 0.985, zIndex: 9 }
+                                : { scale: 0.97, zIndex: 8 }
             }
             transition={swipeDirection ? { duration: 0.3 } : {}}
             drag={isTop && !swipeDirection}
@@ -88,25 +89,31 @@ const ClothingCard = ({ item, onSwipe, isTop, stackPosition }) => {
             dragConstraints={{ left: -200, right: 200, top: 0, bottom: 0 }}
             onDragEnd={handleDragEnd}
             className={`card ${!isTop ? 'card-behind' : ''}`}
-            >
+        >
             <div className="card-content">
                 <div className="card-image" onClick={handleImgClick}>
-                    
+
+
                     {!isInfoSlide ? (
-                        <img
-                            src={item.images[currentImgIndex]}
-                            alt={`${item.name} - Image ${currentImgIndex + 1} of ${item.images.length}`}
-                            draggable={false}
-                            onDragStart={(e) => e.preventDefault()}
-                            loading="lazy"
-                            onLoad={(e) => e.target.style.opacity = 1}
-                            style={{ opacity: 0, transition: `opacity ${CONSTANTS.IMAGE_LAZY_LOAD_FADE_DURATION}ms` }}
-                        />
+                        item.images && item.images[currentImgIndex] ? (
+                            <OptimizedImage
+                                src={item.images[currentImgIndex]}
+                                alt={`${item.name} - Image ${currentImgIndex + 1} of ${item.images.length}`}
+                                size="listing"
+                                draggable={false}
+                                onDragStart={(e) => e.preventDefault()}
+                                loading="lazy"
+                            />
+                        ) : (
+                            <div style={{ width: '100%', height: '100%', background: '#f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                No image
+                            </div>
+                        )
                     ) : (
                         <div className="info-slide">
                             <h3>Description</h3>
                             <p>{item.description || "No description provided."}</p>
-                            
+
                             {item.tags && item.tags.length > 0 && (
                                 <>
                                     <h3>Tags</h3>
@@ -149,25 +156,25 @@ const ClothingCard = ({ item, onSwipe, isTop, stackPosition }) => {
 };
 
 ClothingCard.propTypes = {
-  item: PropTypes.shape({
-    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-    name: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    seller: PropTypes.string.isRequired,
-    images: PropTypes.array.isRequired,
-    description: PropTypes.string,
-    tags: PropTypes.array,
-    timeRemaining: PropTypes.number,
-    expiryTimestamp: PropTypes.number,
-  }).isRequired,
-  onSwipe: PropTypes.func.isRequired,
-  isTop: PropTypes.bool,
-  stackPosition: PropTypes.number,
+    item: PropTypes.shape({
+        id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+        name: PropTypes.string.isRequired,
+        price: PropTypes.number.isRequired,
+        seller: PropTypes.string.isRequired,
+        images: PropTypes.array.isRequired,
+        description: PropTypes.string,
+        tags: PropTypes.array,
+        timeRemaining: PropTypes.number,
+        expiryTimestamp: PropTypes.number,
+    }).isRequired,
+    onSwipe: PropTypes.func.isRequired,
+    isTop: PropTypes.bool,
+    stackPosition: PropTypes.number,
 };
 
 ClothingCard.defaultProps = {
-  isTop: false,
-  stackPosition: 0,
+    isTop: false,
+    stackPosition: 0,
 };
 
 export default ClothingCard;

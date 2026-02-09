@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../lib/supabase';
 import './onboarding.css';
 import { Country, State, City } from 'country-state-city';
+import OptimizedImage from '../components/OptimizedImage';
 
 const Onboarding = ({ onComplete }) => {
   const [step, setStep] = useState(1);
@@ -16,7 +17,7 @@ const Onboarding = ({ onComplete }) => {
     location: '',
     avatar_url: null // url string for uploaded avatar
   });
-  
+
 
   const [selectedCountryCode, setSelectedCountryCode] = useState('');
   const [selectedStateCode, setSelectedStateCode] = useState('');
@@ -33,7 +34,7 @@ const Onboarding = ({ onComplete }) => {
         // prefill form with data from google login
         const meta = session.user.user_metadata;
         const initialAvatar = meta.avatar_url || "https://via.placeholder.com/150";
-        
+
         setFormData(prev => ({
           ...prev,
           username: meta.full_name?.replace(/\s/g, '').toLowerCase() || '',
@@ -47,7 +48,7 @@ const Onboarding = ({ onComplete }) => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-  
+
   const handleCountryChange = (e) => {
     const countryCode = e.target.value;
     const countryData = Country.getCountryByCode(countryCode);
@@ -55,9 +56,9 @@ const Onboarding = ({ onComplete }) => {
     setSelectedCountryCode(countryCode);
     setSelectedStateCode('');
     setFormData({
-        ...formData,
-        country: countryData.name,
-        location: ''
+      ...formData,
+      country: countryData.name,
+      location: ''
     });
   };
 
@@ -76,10 +77,10 @@ const Onboarding = ({ onComplete }) => {
 
   const handleFileChange = (e) => {
     if (!e.target.files || e.target.files.length === 0) return;
-    
+
     const file = e.target.files[0];
     setAvatarFile(file);
-    
+
     // create local preview for immediate visual feedback
     const objectUrl = URL.createObjectURL(file);
     setPreviewUrl(objectUrl);
@@ -111,7 +112,7 @@ const Onboarding = ({ onComplete }) => {
           const { data: { publicUrl } } = supabase.storage
             .from('avatars')
             .getPublicUrl(filePath);
-            
+
           finalAvatarUrl = publicUrl;
         } catch (uploadErr) {
           console.error('Avatar upload failed:', uploadErr);
@@ -131,7 +132,7 @@ const Onboarding = ({ onComplete }) => {
         .eq('id', session.user.id);
 
       if (error) throw error;
-      
+
       onComplete();
 
     } catch (error) {
@@ -149,8 +150,8 @@ const Onboarding = ({ onComplete }) => {
     <div className="onboarding-step fade-in">
       <h2>Let's get setup.</h2>
       <p>Pick a username.</p>
-      <input 
-        type="text" 
+      <input
+        type="text"
         name="username"
         placeholder="@username"
         value={formData.username}
@@ -158,8 +159,8 @@ const Onboarding = ({ onComplete }) => {
         className="onboarding-input"
         autoComplete="off"
       />
-      <button 
-        className="next-btn" 
+      <button
+        className="next-btn"
         disabled={!formData.username}
         onClick={() => setStep(2)}
       >
@@ -173,19 +174,19 @@ const Onboarding = ({ onComplete }) => {
     <div className="onboarding-step fade-in">
       <h2>Pick a look.</h2>
       <p>Tap to change your photo.</p>
-      
+
       <div className="avatar-upload-container" onClick={handleImageClick}>
-        <img src={previewUrl} alt="Avatar Preview" className="avatar-preview" />
+        <OptimizedImage src={previewUrl} alt="Avatar Preview" size="avatar" className="avatar-preview" />
         <div className="avatar-overlay">📷</div>
       </div>
 
       {/* hidden file input */}
-      <input 
-        type="file" 
-        ref={fileInputRef} 
-        onChange={handleFileChange} 
-        accept="image/*" 
-        style={{ display: 'none' }} 
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        accept="image/*"
+        style={{ display: 'none' }}
       />
 
       <div className="button-row">
@@ -200,10 +201,10 @@ const Onboarding = ({ onComplete }) => {
     // get allowed countries
     const allowedCodes = ['US', 'CA', 'ID'];
     const countries = Country.getAllCountries().filter(c => allowedCodes.includes(c.isoCode));
-    
+
     // get states for selected country
     const states = selectedCountryCode ? State.getStatesOfCountry(selectedCountryCode) : [];
-    
+
     // get cities for selected state
     const cities = selectedStateCode ? City.getCitiesOfState(selectedCountryCode, selectedStateCode) : [];
 
@@ -213,8 +214,8 @@ const Onboarding = ({ onComplete }) => {
         <p>Set your shipping origin.</p>
 
         {/* country selector */}
-        <select 
-          className="onboarding-input" 
+        <select
+          className="onboarding-input"
           onChange={handleCountryChange}
           value={selectedCountryCode}
         >
@@ -226,8 +227,8 @@ const Onboarding = ({ onComplete }) => {
 
         {/* state/province selector (appears after country selected) */}
         {selectedCountryCode && (
-          <select 
-            className="onboarding-input" 
+          <select
+            className="onboarding-input"
             style={{ marginTop: '10px' }}
             onChange={handleStateChange}
             value={selectedStateCode}
@@ -241,8 +242,8 @@ const Onboarding = ({ onComplete }) => {
 
         {/* city selector (appears after state selected) */}
         {selectedStateCode && (
-          <select 
-            className="onboarding-input" 
+          <select
+            className="onboarding-input"
             style={{ marginTop: '10px' }}
             onChange={handleCityChange}
             value={formData.location}
@@ -256,8 +257,8 @@ const Onboarding = ({ onComplete }) => {
 
         <div className="button-row">
           <button className="back-btn" onClick={() => setStep(2)}>Back</button>
-          <button 
-            className="next-btn" 
+          <button
+            className="next-btn"
             disabled={!formData.country || !formData.location}
             onClick={handleFinish}
           >

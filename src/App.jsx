@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import { supabase } from './lib/supabase'; 
-import ClothingCard from './assets/components/clothingcard';
-import Header from './assets/components/header';
-import TabBar from './assets/components/tabbar';
-import SwipePage from './assets/pages/swipepage';
-import BrowsePage from './assets/pages/browsepage';
-import MessagesPage from './assets/pages/messagespage';
-import SellerPage from './assets/pages/sellerpage';
-import MainMenu from './assets/components/mainmenu';
-import AddListing from './assets/pages/addlisting';
-import WelcomePage from './assets/pages/welcome';
-import Onboarding from './assets/pages/onboarding';
-import ListingPage from './assets/pages/listingpage';
-import InstagramImport from './assets/pages/instagramimport';
-import ImportEditor from './assets/pages/importeditor';
+import { supabase } from './lib/supabase';
+import ClothingCard from './components/clothingcard';
+import Header from './components/header';
+import TabBar from './components/tabbar';
+import SwipePage from './pages/swipepage';
+import BrowsePage from './pages/browsepage';
+import MessagesPage from './pages/messagespage';
+import SellerPage from './pages/sellerpage';
+import MainMenu from './components/mainmenu';
+import AddListing from './pages/addlisting';
+import WelcomePage from './pages/welcome';
+import Onboarding from './pages/onboarding';
+import ListingPage from './pages/listingpage';
+import InstagramImport from './pages/instagramimport';
+import ImportEditor from './pages/importeditor';
 
 
 
@@ -41,7 +41,7 @@ const sampleItems = [
       "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=500&fit=crop",
       "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=400&h=500&fit=crop",
       "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=400&h=500&fit=crop"
-    ],    
+    ],
     timeRemaining: 180
   },
   {
@@ -56,7 +56,7 @@ const sampleItems = [
       "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=500&fit=crop",
       "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=400&h=500&fit=crop",
       "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=400&h=500&fit=crop"
-    ],    
+    ],
     timeRemaining: 420
   },
   {
@@ -68,7 +68,7 @@ const sampleItems = [
       "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=500&fit=crop",
       "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=400&h=500&fit=crop",
       "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=400&h=500&fit=crop"
-    ],    
+    ],
     timeRemaining: 300
   }
 ];
@@ -96,10 +96,10 @@ export default function App() {
     // 2. Listen for Auth Changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);
-      
+
       if (event === 'SIGNED_OUT') {
         setCurrentPage('welcome');
-      } 
+      }
       // CRITICAL CHANGE: Only redirect on explicit SIGN_IN, and only if we aren't already deep in the app
       else if (event === 'SIGNED_IN') {
         setCurrentPage(curr => (curr === 'welcome' ? 'swipe' : curr));
@@ -109,7 +109,7 @@ export default function App() {
 
     return () => subscription.unsubscribe();
   }, []);
-  
+
 
 
   const goTo = (pageName, params = null) => {
@@ -119,13 +119,13 @@ export default function App() {
 
   const pages = {
     welcome: <WelcomePage onLoginSuccess={() => goTo('swipe')} />,
-    swipe: <SwipePage 
-              itemsTimer={itemsTimer} 
-              onSetItems={setItemsTimer} 
-              onSetCurrentSeller={setCurrentSeller}
-              currentIndex={swipeIndex}
-              onSetIndex={setSwipeIndex}
-            />,
+    swipe: <SwipePage
+      itemsTimer={itemsTimer}
+      onSetItems={setItemsTimer}
+      onSetCurrentSeller={setCurrentSeller}
+      currentIndex={swipeIndex}
+      onSetIndex={setSwipeIndex}
+    />,
     browse: <BrowsePage params={pageParams} onNavigate={goTo} />,
     messages: <MessagesPage />,
     seller: <SellerPage params={pageParams} onNavigate={goTo} />,
@@ -137,28 +137,28 @@ export default function App() {
   };
 
 
- return (
-  
-  
-  <div className="desktop-notice">
+  return (
 
-  <div className="app">
-    {/* Header stays at the top (flex item) */}
-    {currentPage !== 'welcome' && <Header onNavigate={goTo} />}
-    
-    {/* The Page fills the middle (flex: 1) and scrolls internally */}
-    <div className="page-container">
-       {pages[currentPage] || pages.welcome}
+
+    <div className="desktop-notice">
+
+      <div className="app">
+        {/* Header stays at the top (flex item) */}
+        {currentPage !== 'welcome' && <Header onNavigate={goTo} currentPage={currentPage} />}
+
+        {/* The Page fills the middle (flex: 1) and scrolls internally */}
+        <div className="page-container">
+          {pages[currentPage] || pages.welcome}
+        </div>
+
+        {/* Footer stays at the bottom (flex item) */}
+        {currentPage !== 'welcome' && (
+          currentPage === 'swipe'
+            ? <TabBar onNavigate={goTo} currentPage={currentPage} currentSeller={currentSeller} />
+            : <MainMenu onNavigate={goTo} currentPage={currentPage} />
+        )}
+      </div>
     </div>
-
-    {/* Footer stays at the bottom (flex item) */}
-    {currentPage !== 'welcome' && (
-      currentPage === 'swipe'
-        ? <TabBar onNavigate={goTo} currentPage={currentPage} currentSeller={currentSeller} />
-        : <MainMenu onNavigate={goTo} currentPage={currentPage} />
-    )}
-  </div>
-  </div>
-);
+  );
 
 }

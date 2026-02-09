@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import './welcome.css';
-import { supabase } from "../../lib/supabase";
+import { supabase } from "../lib/supabase";
 
 const WelcomePage = ({ onLoginSuccess }) => {
 

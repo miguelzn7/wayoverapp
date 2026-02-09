@@ -24,71 +24,30 @@ body {
   height: 100dvh;
   display: flex;
   flex-direction: column;
-  background: #ffffff;
+  background: #fbfdf9;
   position: relative;
   overflow: hidden;
   box-sizing: border-box;
 }
 
 /* 3. DESKTOP MODE (The Emulator) */
-@media (min-width: 1024px) {
-
-  /* 1. Reset the body to be the dark backdrop */
-  body {
-    margin: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #2d2d2d;
-    /* Dark background */
-    min-height: 100vh;
-  }
-
-  /* 2. Target the wrapper from your App.jsx */
-  .desktop-notice {
-    display: flex;
-    justify-content: center;
-    /* This centers the phone horizontally */
-    align-items: center;
-    /* This centers the phone vertically */
-    width: 100%;
-    min-height: 100vh;
-  }
-
-  /* 3. The Phone Frame */
-  .app {
-    width: 393px;
-    height: 852px;
-    border: 12px solid #000;
-    border-radius: 55px;
-    background: white;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-    /* Remove transform: scale if it's cutting off the top/bottom */
-    transform: scale(0.9);
-    /* Ensure it doesn't try to flex-grow */
-    flex-shrink: 0;
-  }
+/* 3. RESPONSIVE LAYOUT */
+/* By default, .app takes full width/height (already set in SHARED APP CORE) */
+.desktop-notice {
+  width: 100%;
+  height: 100%;
 }
 
-/* 4. MOBILE / TABLET MODE (True Fullscreen) */
-@media (max-width: 1023px) {
-
-  .desktop-notice,
-  #root {
-    width: 100%;
-    height: 100%;
-  }
-
-  .app {
-    width: 100vw !important;
-    height: 100dvh !important;
-    border: none !important;
-    border-radius: 0 !important;
-    transform: none !important;
-  }
+/* Ensure body background is consistent (white or whatever the app theme is) */
+/* If you want the app content to be white but the empty space (if any) to be grey, you can adjust */
+/* For now, let's keep it simple: full screen app */
+body {
+  background: #fbfdf9;
 }
+
+/* On very large screens, you might want to constrain width IF desired, 
+   but for "properly scaled web app", we usually let it fill.
+   If specific pages need constraints, handle them in page-specific CSS. */
 
 /* 5. Page Layout - The "Lock-In" logic */
 .page-container {
@@ -113,7 +72,7 @@ body {
   flex-shrink: 0;
   /* env(safe-area-inset-bottom) is the secret sauce for iPhone notches */
   padding-bottom: calc(env(safe-area-inset-bottom) + 12px);
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(251, 253, 249, 0.85);
   backdrop-filter: blur(10px);
   /* Makes it look premium/glassy */
   border-top: 1px solid rgba(0, 0, 0, 0.05);

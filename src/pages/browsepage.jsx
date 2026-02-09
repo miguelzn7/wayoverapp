@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../lib/supabase';
 import './browsepage.css';
-import { parseImages } from '../../lib/utils'; 
+import { parseImages } from '../lib/utils';
+import OptimizedImage from '../components/OptimizedImage';
 
 const BrowsePage = ({ params, onNavigate }) => {
   const [listings, setListings] = useState([]);
@@ -12,11 +13,7 @@ const BrowsePage = ({ params, onNavigate }) => {
 
   const POPULAR_TAGS = ['vintage', 'streetwear', 'y2k', 'denim', 'shoes', 'hoodie'];
 
-  // optimize image urls with automatic sizing and format conversion
-  const optImg = (url) => {
-    if (!url) return 'https://via.placeholder.com/400';
-    return `https://wsrv.nl/?url=${encodeURIComponent(url)}&w=400&q=80&output=webp`;
-  };
+
 
   useEffect(() => {
     if (params?.search !== undefined) {
@@ -57,15 +54,15 @@ const BrowsePage = ({ params, onNavigate }) => {
     <div className="browse-page">
       <div className="browse-header">
         <div className="tags-scroller">
-          <button 
+          <button
             className={`tag-chip ${selectedTag === null ? 'active' : ''}`}
             onClick={() => setSelectedTag(null)}
           >
             All
           </button>
-          
+
           {POPULAR_TAGS.map(tag => (
-            <button 
+            <button
               key={tag}
               className={`tag-chip ${selectedTag === tag ? 'active' : ''}`}
               onClick={() => setSelectedTag(tag === selectedTag ? null : tag)}
@@ -83,23 +80,24 @@ const BrowsePage = ({ params, onNavigate }) => {
           <p className="empty-text">No items found.</p>
         ) : (
           listings.map(item => (
-            <div key={item.id} 
-            className="browse-card"
-            onClick={() => onNavigate && onNavigate('listing', { item: item })}>
+            <div key={item.id}
+              className="browse-card"
+              onClick={() => onNavigate && onNavigate('listing', { item: item })}>
               <div className="image-wrapper">
-                <img 
-                    src={optImg(getFirstImage(item))} 
-                    alt={`${item.name} - thumbnail`}
-                    loading="lazy" 
+                <OptimizedImage
+                  src={getFirstImage(item)}
+                  alt={`${item.name} - thumbnail`}
+                  size="card"
+                  loading="lazy"
                 />
                 <span className="price-tag">${item.price}</span>
               </div>
               <div className="card-details">
                 <h3>{item.name}</h3>
                 <div className="card-tags">
-                   {item.tags && item.tags.slice(0,2).map(t => (
-                     <span key={t} className="tiny-tag">#{t}</span>
-                   ))}
+                  {item.tags && item.tags.slice(0, 2).map(t => (
+                    <span key={t} className="tiny-tag">#{t}</span>
+                  ))}
                 </div>
               </div>
             </div>

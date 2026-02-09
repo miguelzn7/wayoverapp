@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './sellerpage.css';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../lib/supabase';
 import { Settings, Trash2, Edit3 } from 'lucide-react';
+import OptimizedImage from '../components/OptimizedImage';
 
 const SellerPage = ({ params, onNavigate }) => {
-  const sellerParam = params?.seller; 
+  const sellerParam = params?.seller;
   const [seller, setSeller] = useState(null);
   const [isOwner, setIsOwner] = useState(false);
   const [liveListings, setLiveListings] = useState([]);
@@ -12,12 +13,7 @@ const SellerPage = ({ params, onNavigate }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // image optimization with automatic resizing
-  const optImg = (url, width) => {
-    if (!url) return '';
-    if (url.includes('dicebear')) return url;
-    return `https://wsrv.nl/?url=${encodeURIComponent(url)}&w=${width}&q=80&output=webp`;
-  };
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,33 +28,33 @@ const SellerPage = ({ params, onNavigate }) => {
         let foundUser = null;
 
         if (!targetUsername && user) {
-             const { data: myProfile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
-             if (myProfile) {
-                 foundUser = myProfile;
-                 targetUsername = myProfile.username;
-                 setIsOwner(true);
-             }
-        } 
+          const { data: myProfile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+          if (myProfile) {
+            foundUser = myProfile;
+            targetUsername = myProfile.username;
+            setIsOwner(true);
+          }
+        }
         else if (targetUsername) {
-            const { data: profileData } = await supabase.from('profiles').select('*').ilike('username', targetUsername).maybeSingle();
-            if (profileData) {
-                foundUser = profileData;
-                if (user && profileData.id === user.id) setIsOwner(true);
-            } else {
-                const { data: sellerData } = await supabase.from('sellers').select('*').ilike('username', targetUsername).maybeSingle();
-                foundUser = sellerData;
-            }
+          const { data: profileData } = await supabase.from('profiles').select('*').ilike('username', targetUsername).maybeSingle();
+          if (profileData) {
+            foundUser = profileData;
+            if (user && profileData.id === user.id) setIsOwner(true);
+          } else {
+            const { data: sellerData } = await supabase.from('sellers').select('*').ilike('username', targetUsername).maybeSingle();
+            foundUser = sellerData;
+          }
         }
 
         if (!foundUser) { setError("User not found"); setLoading(false); return; }
         setSeller(foundUser);
 
         if (targetUsername) {
-            const { data: liveData } = await supabase.from('livelistings').select('*').ilike('seller', targetUsername); 
-            setLiveListings(liveData || []);
+          const { data: liveData } = await supabase.from('livelistings').select('*').ilike('seller', targetUsername);
+          setLiveListings(liveData || []);
 
-            const { data: listingsData } = await supabase.from('listings').select('*').ilike('seller', targetUsername); 
-            setListings(listingsData || []);
+          const { data: listingsData } = await supabase.from('listings').select('*').ilike('seller', targetUsername);
+          setListings(listingsData || []);
         }
 
       } catch (err) { setError('Failed to load data'); } finally { setLoading(false); }
@@ -68,7 +64,7 @@ const SellerPage = ({ params, onNavigate }) => {
 
   const handleDelete = async (e, itemId, isLive) => {
     e.stopPropagation(); // Prevent navigating to the listing page
-    
+
     const confirmDelete = window.confirm("Are you sure you want to delete this listing?");
     if (!confirmDelete) return;
 
@@ -95,8 +91,8 @@ const SellerPage = ({ params, onNavigate }) => {
   const handleEdit = (e, item, isLive) => {
     e.stopPropagation();
     // We send it to the import-editor as an array of 1 item
-    onNavigate('import-editor', { 
-      items: [{ ...item, isEditing: true, table: isLive ? 'livelistings' : 'listings' }] 
+    onNavigate('import-editor', {
+      items: [{ ...item, isEditing: true, table: isLive ? 'livelistings' : 'listings' }]
     });
   };
 
@@ -108,7 +104,7 @@ const SellerPage = ({ params, onNavigate }) => {
       if (Array.isArray(imgs)) return imgs[0];
       if (typeof imgs === 'string') {
         const parsed = JSON.parse(imgs);
-        return Array.isArray(parsed) ? parsed[0] : parsed; 
+        return Array.isArray(parsed) ? parsed[0] : parsed;
       }
     } catch (e) { return imgs; }
     return null;
@@ -129,30 +125,31 @@ const SellerPage = ({ params, onNavigate }) => {
     <div className="seller-page">
       <header className="seller-header">
         {/* seller avatar */}
-        <img
-          src={optImg(avatarFor(seller), 150)}
+        <OptimizedImage
+          src={avatarFor(seller)}
           alt="avatar"
+          size="avatar"
           className="seller-avatar"
         />
         <div className="seller-meta">
           <h1 className="seller-name">{seller.username}</h1>
           <div className="seller-sub">
             <span className="seller-location">
-               {seller.location ? `${seller.location}, ${seller.country}` : seller.country || 'No Location'}
-			</span>
+              {seller.location ? `${seller.location}, ${seller.country}` : seller.country || 'No Location'}
+            </span>
             {seller.rating && <span className="seller-rating">★ {seller.rating}</span>}
           </div>
         </div>
-        
+
         {isOwner && (
-            <div style={{ marginLeft: 'auto' }}>
-                <button 
-                    onClick={() => onNavigate('onboarding')}
-                    style={{ background: '#f3f4f6', border: '1px solid #e5e7eb', padding: '8px 12px', borderRadius: '8px', fontWeight: '600', fontSize: '0.9rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
-                >
-                    <Settings size={16} /> Edit Profile
-                </button>
-            </div>
+          <div style={{ marginLeft: 'auto' }}>
+            <button
+              onClick={() => onNavigate('onboarding')}
+              style={{ background: '#f3f4f6', border: '1px solid #e5e7eb', padding: '8px 12px', borderRadius: '8px', fontWeight: '600', fontSize: '0.9rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+            >
+              <Settings size={16} /> Edit Profile
+            </button>
+          </div>
         )}
       </header>
 
@@ -164,8 +161,8 @@ const SellerPage = ({ params, onNavigate }) => {
               <div className="live-card" key={`live-${item.id}`} onClick={() => onNavigate && onNavigate('listing', { item: item })}>
                 <div className="card-image-wrap">
                   {/* live listing image */}
-                  <img src={optImg(safeFirstImage(item), 400)} className="card-image" alt="item" />
-                  
+                  <OptimizedImage src={safeFirstImage(item)} size="card" className="card-image" alt="item" />
+
                   {/* OWNER CONTROLS */}
                   {isOwner && (
                     <div className="owner-controls">
@@ -177,7 +174,7 @@ const SellerPage = ({ params, onNavigate }) => {
                       </button>
                     </div>
                   )}
-                  
+
                   <div className="price-badge">${item.price}</div>
                 </div>
               </div>
@@ -194,8 +191,8 @@ const SellerPage = ({ params, onNavigate }) => {
               <div className="grid-card" key={`listing-${item.id}`} onClick={() => onNavigate && onNavigate('listing', { item: item })}>
                 <div className="grid-image-wrap">
                   {/* listing image */}
-                  <img src={optImg(safeFirstImage(item), 400)} className="grid-image" alt="item" />
-                  
+                  <OptimizedImage src={safeFirstImage(item)} size="card" className="grid-image" alt="item" />
+
                   {/* OWNER CONTROLS */}
                   {isOwner && (
                     <div className="owner-controls">
@@ -207,7 +204,7 @@ const SellerPage = ({ params, onNavigate }) => {
                       </button>
                     </div>
                   )}
-                  
+
                   <div className="price-badge small">${item.price}</div>
                 </div>
               </div>
